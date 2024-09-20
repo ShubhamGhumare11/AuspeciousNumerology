@@ -471,35 +471,193 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+// import { FaCircle, FaHeart, FaCartPlus, FaEye } from "react-icons/fa";
+// import { AiFillStar } from "react-icons/ai";
+// import { Box, Flex, Text, Image, Icon, Button, Stack, Badge, Divider, Checkbox, CheckboxGroup, AspectRatio, VStack } from "@chakra-ui/react";
+// import axios from 'axios';
+// import { useParams } from 'react-router-dom';
+
+// function ProductDetail() {
+//   const { id } = useParams();
+//   const [product, setProduct] = useState({});
+//   const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
+//   const [imageList, setImageList] = useState([]);
+
+//   useEffect(() => {
+//     fetchProduct(id);
+//   }, [id]);
+
+//   const fetchProduct = async () => {
+//     try {
+//       const response = await axios.get(`http://localhost:8086/api/products/${id}`);
+//       let ProductObj = response.data.object;
+      
+//       // Setting the product data and image URLs
+//       setProduct(ProductObj);
+//       setImageList(ProductObj.imageURLs.map(url => ({ url, alt: "Product Image" })));
+      
+//     } catch (error) {
+//       console.error('Error fetching product:', error);
+//     }
+//   };
+
+//   return (
+//     <Box maxW="container.xl" mx="auto" p={6} boxShadow="lg">
+//       <Flex direction={["column", "column", "row"]} gap={8}>
+//         {/* Left section: Image thumbnails and big image */}
+//         <Stack direction="row" spacing={4} w={["100%", "100%", "40%"]}>
+//           {/* Image Thumbnails */}
+//           <VStack spacing={4} align="flex-start">
+//             {imageList.map((image, index) => (
+//               <Box
+//                 key={index}
+//                 border={hoveredImageIndex === index ? "2px solid blue" : "2px solid transparent"}
+//                 cursor="pointer"
+//                 onMouseEnter={() => setHoveredImageIndex(index)}
+//               >
+//                 <Image
+//                   src={image.url}
+//                   alt={image.alt}
+//                   boxSize="80px"
+//                   objectFit="cover"
+//                 />
+//               </Box>
+//             ))}
+//           </VStack>
+
+//           {/* Main Product Image */}
+//           <AspectRatio ratio={4 / 3} w="100%">
+//             <Image src={imageList[hoveredImageIndex]?.url || product.imageURL} alt="Big Product Image" objectFit="contain" borderRadius="md" />
+//           </AspectRatio>
+//         </Stack>
+
+//         {/* Right section: Product Details */}
+//         <Box flex="1" p={6} borderRadius="lg" bg="white">
+//           <Text fontSize="2xl" fontWeight="bold" mb={2}>
+//             {product.productName || "Product Name"}
+//           </Text>
+//           <Text fontSize="xl" fontWeight="semibold" color="gray.600" mb={4}>
+//             {product.description || "Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
+//           </Text>
+
+//           <Flex align="center" mb={4}>
+//             <Text fontSize="2xl" fontWeight="bold" mr={4}>${product.price || "99.99"}</Text>
+//             <Stack direction="row" spacing={1} align="center">
+//               <Icon as={AiFillStar} color="yellow.400" />
+//               <Icon as={AiFillStar} color="yellow.400" />
+//               <Icon as={AiFillStar} color="yellow.400" />
+//               <Icon as={AiFillStar} color="yellow.400" />
+//               <Icon as={AiFillStar} color="gray.400" />
+//               <Text color="gray.500" fontSize="sm">(4.5/5)</Text>
+//             </Stack>
+//           </Flex>
+
+//           {/* Add to Cart / Favorite Buttons */}
+//           <Stack direction="row" spacing={4} mb={6}>
+//             <Button
+//               leftIcon={<FaCartPlus />}
+//               colorScheme="teal"
+//               variant="solid"
+//               size="lg"
+//             >
+//               Add to Cart
+//             </Button>
+//             <Button
+//               leftIcon={<FaHeart />}
+//               colorScheme="pink"
+//               variant="outline"
+//               size="lg"
+//             >
+//               Favorite
+//             </Button>
+//           </Stack>
+
+//           <Divider mb={4} />
+
+//           {/* Product Options */}
+//           <Box>
+//             <Text fontSize="lg" fontWeight="semibold" mb={2}>
+//               Color Options:
+//             </Text>
+//             <Flex>
+//               <Icon as={FaCircle} color="blue.500" boxSize={6} mr={3} />
+//               <Icon as={FaCircle} color="red.500" boxSize={6} mr={3} />
+//               <Icon as={FaCircle} color="green.500" boxSize={6} mr={3} />
+//             </Flex>
+//           </Box>
+
+//           <Box mt={4}>
+//             <Text fontSize="lg" fontWeight="semibold" mb={2}>
+//               Size:
+//             </Text>
+//             <CheckboxGroup colorScheme="teal">
+//               <Stack direction="row" spacing={5}>
+//                 <Checkbox value="S">S</Checkbox>
+//                 <Checkbox value="M">M</Checkbox>
+//                 <Checkbox value="L">L</Checkbox>
+//                 <Checkbox value="XL">XL</Checkbox>
+//               </Stack>
+//             </CheckboxGroup>
+//           </Box>
+//         </Box>
+//       </Flex>
+//     </Box>
+//   );
+// }
+
+// export default ProductDetail;
+
+
+
+
 import React, { useEffect, useState } from "react";
-import { FaCircle, FaHeart, FaCartPlus, FaEye } from "react-icons/fa";
+import { FaCircle, FaHeart, FaCartPlus } from "react-icons/fa";
 import { AiFillStar } from "react-icons/ai";
 import { Box, Flex, Text, Image, Icon, Button, Stack, Badge, Divider, Checkbox, CheckboxGroup, AspectRatio, VStack } from "@chakra-ui/react";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
 function ProductDetail() {
-  const { id } = useParams();
+  const { id } = useParams(); // Initially fetch the product by its default ID
   const [product, setProduct] = useState({});
   const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
   const [imageList, setImageList] = useState([]);
+  const [availableColors, setAvailableColors] = useState([]); // To store available colors
 
   useEffect(() => {
- 
-    fetchProduct(id);
+    fetchProductById(id); // Fetch the product initially by ID
   }, [id]);
 
-  const fetchProduct = async () => {
+  // Function to fetch product by ID
+  const fetchProductById = async (productId) => {
     try {
-      const response = await axios.get(`http://localhost:8086/api/products/${id}`);
-      let ProductObj = response.data.object;
-      
-      // Setting the product data and image URLs
+      const response = await axios.get(`http://localhost:8086/api/products/${productId}`);
+      const ProductObj = response.data.object;
+
+      // Set product details and image list
       setProduct(ProductObj);
       setImageList(ProductObj.imageURLs.map(url => ({ url, alt: "Product Image" })));
-      
+
+      // Assuming backend provides available colors for the product
+      setAvailableColors(response.data.availableColors);
     } catch (error) {
       console.error('Error fetching product:', error);
+    }
+  };
+
+  // Function to handle color change
+  const handleColorChange = async (color) => {
+    try {
+      // Fetch the product variation based on the selected color
+      const response = await axios.get(`http://localhost:8086/api/products/color/${color}`);
+      const ProductObj = response.data.object;
+
+      // Update the product details and image list for the selected color
+      setProduct(ProductObj);
+      setImageList(ProductObj.imageURLs.map(url => ({ url, alt: "Product Image" })));
+    } catch (error) {
+      console.error('Error fetching product for selected color:', error);
     }
   };
 
@@ -556,42 +714,33 @@ function ProductDetail() {
 
           {/* Add to Cart / Favorite Buttons */}
           <Stack direction="row" spacing={4} mb={6}>
-            <Button
-              leftIcon={<FaCartPlus />}
-              colorScheme="teal"
-              variant="solid"
-              size="lg"
-            >
-              Add to Cart
-            </Button>
-            <Button
-              leftIcon={<FaHeart />}
-              colorScheme="pink"
-              variant="outline"
-              size="lg"
-            >
-              Favorite
-            </Button>
+            <Button leftIcon={<FaCartPlus />} colorScheme="teal" variant="solid" size="lg">Add to Cart</Button>
+            <Button leftIcon={<FaHeart />} colorScheme="pink" variant="outline" size="lg">Favorite</Button>
           </Stack>
 
           <Divider mb={4} />
 
-          {/* Product Options */}
+          {/* Color Options */}
           <Box>
-            <Text fontSize="lg" fontWeight="semibold" mb={2}>
-              Color Options:
-            </Text>
+            <Text fontSize="lg" fontWeight="semibold" mb={2}>Color Options:</Text>
             <Flex>
-              <Icon as={FaCircle} color="blue.500" boxSize={6} mr={3} />
-              <Icon as={FaCircle} color="red.500" boxSize={6} mr={3} />
-              <Icon as={FaCircle} color="green.500" boxSize={6} mr={3} />
+              {availableColors.map((colorOption, index) => (
+                <Icon
+                  key={index}
+                  as={FaCircle}
+                  color={colorOption} // Assuming colorOption contains the color hex code or name
+                  boxSize={6}
+                  mr={3}
+                  cursor="pointer"
+                  onClick={() => handleColorChange(colorOption)} // Change product based on selected color
+                />
+              ))}
             </Flex>
           </Box>
 
+          {/* Size Options */}
           <Box mt={4}>
-            <Text fontSize="lg" fontWeight="semibold" mb={2}>
-              Size:
-            </Text>
+            <Text fontSize="lg" fontWeight="semibold" mb={2}>Size:</Text>
             <CheckboxGroup colorScheme="teal">
               <Stack direction="row" spacing={5}>
                 <Checkbox value="S">S</Checkbox>
@@ -608,4 +757,3 @@ function ProductDetail() {
 }
 
 export default ProductDetail;
-
