@@ -1,0 +1,50 @@
+import React from "react";
+
+import {
+  Box,
+  Flex,
+  Image,
+  Text,
+  Button,
+  Stack,
+  Radio,
+  RadioGroup,
+} from "@chakra-ui/react";
+const SampleProductCard1 = () => {
+  return (
+    <Flex p={8} justify="space-between">
+      {" "}
+      {/* Product Images */}{" "}
+      <Box flex="1">
+        <Image src="data:image/jpeg;base64,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" alt="Product Image" />
+      </Box>{" "}
+      {/* Product Info */}{" "}
+      <Box flex="1" pl={8}>
+        <Text fontSize="xl" fontWeight="bold">
+          THE INDIAN GARAGE CO
+        </Text>
+        <Text fontSize="lg" color="gray.500">
+          Checked Shirt with Patch Pocket
+        </Text>
+        <Text fontSize="xl" fontWeight="bold">
+          ₹507
+        </Text>
+        <Text color="green.500">74% OFF</Text>
+        <Text mt={4}>Select Size</Text>
+        <RadioGroup defaultValue="M">
+          <Stack direction="row" spacing={4}>
+            <Radio value="S">S</Radio>
+            <Radio value="M">M</Radio>
+            <Radio value="L">L</Radio>
+            <Radio value="XL">XL</Radio>
+            <Radio value="XXL">XXL</Radio>
+          </Stack>
+        </RadioGroup>
+        <Button mt={4} colorScheme="teal">
+          ADD TO BAG
+        </Button>
+      </Box>
+    </Flex>
+  );
+};
+export default SampleProductCard1;
