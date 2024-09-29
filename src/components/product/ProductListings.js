@@ -1,4 +1,7 @@
+// ProductCard1.js
+import React from 'react'; // Keep only one of these
 
+  
 // ***************************USeTHIS final Component from uses backend Api*******************************************
 // import React, { useState, useEffect } from 'react';
 // import { Box, SimpleGrid, Stack, Flex } from '@chakra-ui/react';
@@ -73,12 +76,12 @@
 // export default ProductListings;
 
 
-// *******************************************Use this componet that provide mock json*********************************************************************
-import React, { useState, useEffect } from 'react';
+// *******************************************Use this component that provide mock json*********************************************************************
+import { useState, useEffect } from 'react';
 import { Box, SimpleGrid, Stack, Flex } from '@chakra-ui/react';
 import ProductCard from './ProductCard';
-import Filters from './Filters';
-import Sorting from './Sorting';
+import Filters from '../Filters';
+import Sorting from '../Sorting';
 import axios from 'axios';
  // Sample product data
  const productDataList = [

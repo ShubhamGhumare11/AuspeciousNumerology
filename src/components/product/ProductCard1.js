@@ -1,4 +1,9 @@
-// import React, { useEffect, useState } from "react";
+
+ 
+ // Prod
+import React from 'react'; // Keep only one of these
+
+ // import React, { useEffect, useState } from "react";
 // import { FaCircle, FaHeart, FaCartPlus } from "react-icons/fa";
 // import { AiFillStar } from "react-icons/ai";
 // import { Box, Flex, Text, Image, Icon, Button, Stack, Badge, Divider, Checkbox, CheckboxGroup, AspectRatio, VStack } from "@chakra-ui/react";
@@ -914,7 +919,7 @@
 
 // export default ProductDetail;
 
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -930,6 +935,8 @@ import {
   HStack,VStack,Alert,AlertIcon,Input,InputGroup,InputRightElement,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons"; // Import the icons
+import {   Tag, TagLeftIcon, TagLabel,  } from '@chakra-ui/react';
+
 
 import { FaCircle, FaCartPlus, FaHeart, FaTags } from "react-icons/fa";
 import { FaMoneyBillWave, FaExchangeAlt, FaTruck } from 'react-icons/fa';
@@ -970,6 +977,8 @@ function ProductDetail() {
             { size: "S", stock: 10 },
             { size: "M", stock: 5 },
             { size: "L", stock: 2 },
+            { size: "XL", stock: 2 },
+            { size: "XXL", stock: 0 },
           ],
           material: "100% Cotton",
           rating: 4.3,
@@ -1010,6 +1019,37 @@ function ProductDetail() {
             deliveryDate: "2024-10-06",
             shippingOptions: ["Standard Shipping"],
             cashOnDeliveryAvailable: false,
+          },
+        },
+        {
+          variantId: 203,
+          color: "pink",
+          images: [
+            "https://m.media-amazon.com/images/I/618Wek95laS._SY879_.jpg",
+            "https://m.media-amazon.com/images/I/61hq+LfAdOS._SY741_.jpg",
+            "https://m.media-amazon.com/images/I/51V2gEYvc8S._SY741_.jpg",
+            "https://m.media-amazon.com/images/I/51PRAkh5OtS._SY741_.jpg",
+            "https://m.media-amazon.com/images/I/71ZKcnsNHRS._SY741_.jpg",
+            "https://m.media-amazon.com/images/I/81rOnPwPDoL._SY741_.jpg",
+          ],
+          price:45,
+          discount: "5%",
+          sizes: [
+            { size: "S", stock: 0 },
+            { size: "M", stock: 0 },
+            { size: "L", stock: 0 },
+          ],
+          material: "100% Cotton",
+          rating: 2.7,
+          reviewsCount: 791,
+          offers: [
+            "5% off on debit card payments",
+            "Free shipping on orders above $50",
+          ],
+          shipping: {
+            deliveryDate: "2025-06-06",
+            shippingOptions: ["Standard Shipping"],
+            cashOnDeliveryAvailable: true,
           },
         },
       ],
@@ -1283,6 +1323,25 @@ function ProductDetail() {
           </Box>
           {/* Main Product Image */}
           <Box maxW="500px" maxH="500px" overflow="hidden">
+          
+
+
+        {/* Custom Tag */}
+        <Box
+          position="absolute"
+        
+          bg="pink.500"
+          color="white"
+          px={4}
+          py={2}
+          fontWeight="bold"
+          borderRadius="0 10px 10px 0"
+          clipPath="polygon(0 0, 100% 0, 85% 100%, 0% 100%)" // Tag shape
+        >
+          {selectedVariant.discount} OFF
+        </Box>
+
+
             <Image
               src={currentImage}
               alt={selectedVariant.images[0]}
@@ -1295,7 +1354,7 @@ function ProductDetail() {
 
         {/* Right Section: Product Details */}
         <Box flex="1"// This allows it to take the remaining space
-    maxH="500px" // Set a maximum height to create the scrollable area
+    // maxH="500px" // Set a maximum height to create the scrollable area
     overflowY="auto" // Enable vertical scrolling
     p={4} // Optional padding p={6} borderRadius="lg" bg="white"
     >
@@ -1325,7 +1384,7 @@ function ProductDetail() {
                 {/* Display reviews count */}
               </Text>
             </Stack>
-            <Tooltip label="View all reviews" fontSize="md">
+            <Tooltip label="View all reviews" fontSize="md" mx={4}>
               <Icon
                 as={AiOutlineQuestionCircle}
                 color="gray.500"
@@ -1333,6 +1392,10 @@ function ProductDetail() {
                 cursor="pointer"
               />
             </Tooltip>
+
+            <Text color={(selectedVariant?.sizes || []).some((size) => size.stock > 0) ? "green.500" : "red.500"} mx={4}>
+  {(selectedVariant?.sizes || []).some((size) => size.stock > 0)? "In Stock" : "Out of Stock"}
+</Text>
           </Flex>
 
 
@@ -1345,18 +1408,27 @@ function ProductDetail() {
             <Text fontSize="2xl" fontWeight="bold" mr={4}>
               ${selectedVariant.price}
             </Text>
+           
             {selectedVariant.shipping.cashOnDeliveryAvailable && (
             <Badge fontFamily="sans-serif"  borderRadius="xl" colorScheme="green" my={2}>
               Cash on Delivery Available
             </Badge>
           )}
+
           </Flex>
           <Text fontSize="sm" fontWeight=""   display="inline">
           MRP{' '}<Text  as="span" textDecoration="line-through" mx={1}> ${selectedProduct.basePrice}  </Text>Inclusive of all taxes
             </Text>
+
+  
+
+
             <Divider mb={4} borderColor="gray.700" />
          
 
+
+
+{/* ******************************************************************************* */}
           {/* Size Options */}
           <Text fontSize="lg" fontWeight="semibold" mb={2} mt={4}>
             Select Size:
@@ -1368,7 +1440,7 @@ function ProductDetail() {
                 key={index}
                 variant={selectedSize === size.size ? "solid" : "outline"}
                 colorScheme="pink"
-                isDisabled={size.stock === 0}
+                // isDisabled={size.stock === 0}
                 opacity={size.stock === 0 ? 0.5 : 1} // Fade effect for unavailable sizes
                 // leftIcon={size.stock > 0 ? <CheckIcon /> : <CloseIcon />}
                 onClick={() => setSelectedSize(size.size)}
@@ -1570,6 +1642,11 @@ function ProductDetail() {
                 <Icon as={FaTags} color="pink.500" /> {offer}
               </Text>
             ))}
+            {selectedVariant.shipping.cashOnDeliveryAvailable && (
+            <Text>
+            <Icon as={FaTags} color="pink.500" /> Cash on Delivery Available
+            </Text>
+          )}
           </Box>
 
 

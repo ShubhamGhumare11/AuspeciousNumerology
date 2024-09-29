@@ -73,15 +73,15 @@ import Navbar from "./components/Navbar";
 import CategoryBar from "./components/CategoryBar";
 import BestSellers from "./components/BestSeller";
 import Banner from "./components/Banner";
-import ProductListings from "./components/ProductListings";
+import ProductListings from "./components/product/ProductListings";
 import Footer from "./components/Footer";
 import LiveShopping from "./components/LiveShoppingPage";
-import ProductCard1 from "./components/Cards/ProductCard1";
+import ProductCard1 from "./components/product/ProductCard1";
 import ProductCarousel1 from "./components/Cards/ProductCarousel1";
 import SampleProductCard1 from "./components/Cards/SampleProductCard1";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Card1 from "./components/Cards/Card1";
-import ProductDetail from "./components/Cards/ProductCard1";
+import ProductDetail from "./components/product/ProductCard1";
 import Layout from "./components/Layout";
 
 
