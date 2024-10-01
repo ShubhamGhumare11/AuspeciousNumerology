@@ -69,6 +69,8 @@
 
 import logo from "./logo.svg";
 import "./App.css";
+import { Flex, Box } from '@chakra-ui/react';
+
 import Navbar from "./components/Navbar";
 import CategoryBar from "./components/CategoryBar";
 import BestSellers from "./components/BestSeller";
@@ -83,16 +85,24 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Card1 from "./components/Cards/Card1";
 import ProductDetail from "./components/product/ProductCard1";
 import Layout from "./components/Layout";
+import { WishlistProvider } from './components/product/WishlistContext'; // Adjust the path if necessary
+import WishlistComponent from './components/product/WishlistComponent '; // Import your wishlist component
+
+
 
 
 function App() {
   return (
-    <Router>
+
+    <Flex direction="column" minHeight="100vh"> 
+    <WishlistProvider> {/* Wrap the application with WishlistProvider */}
+    <Router >
       <Navbar /> {/* Always visible */}
+      <Box flex="1">
+    <Layout  >
 
 
-      <Layout>
-      <Routes>
+      <Routes >
         {/* Route for the home page */}
         <Route
           path="/"
@@ -103,7 +113,6 @@ function App() {
               <BestSellers />
               <ProductListings />
               <LiveShopping />
-              <Footer />
             </>
           }
         />
@@ -113,6 +122,8 @@ function App() {
 
         {/* Route for the product listings page */}
         <Route path="/productListing" element={<ProductListings />} />
+        <Route path="/wishlist" element={<WishlistComponent />} />
+
       </Routes>
 
       {/* Common components that you want to appear everywhere */}
@@ -120,11 +131,13 @@ function App() {
       <ProductCarousel1 />
       <SampleProductCard1 />
       <Card1 /> */}
-
-
-
       </Layout>
+      </Box>
+      <Footer />
     </Router>
+    </WishlistProvider>
+    </Flex>
+
   );
 }
 

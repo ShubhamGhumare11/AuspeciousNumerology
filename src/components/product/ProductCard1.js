@@ -1,9 +1,7 @@
+// Prod
+import React from "react"; // Keep only one of these
 
- 
- // Prod
-import React from 'react'; // Keep only one of these
-
- // import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
 // import { FaCircle, FaHeart, FaCartPlus } from "react-icons/fa";
 // import { AiFillStar } from "react-icons/ai";
 // import { Box, Flex, Text, Image, Icon, Button, Stack, Badge, Divider, Checkbox, CheckboxGroup, AspectRatio, VStack } from "@chakra-ui/react";
@@ -919,7 +917,7 @@ import React from 'react'; // Keep only one of these
 
 // export default ProductDetail;
 
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Flex,
@@ -932,14 +930,19 @@ import {
   Icon,
   Tooltip,
   Divider,
-  HStack,VStack,Alert,AlertIcon,Input,InputGroup,InputRightElement,
+  HStack,
+  VStack,
+  Alert,
+  AlertIcon,
+  Input,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons"; // Import the icons
-import {   Tag, TagLeftIcon, TagLabel,  } from '@chakra-ui/react';
-
+import { Tag, TagLeftIcon, TagLabel } from "@chakra-ui/react";
 
 import { FaCircle, FaCartPlus, FaHeart, FaTags } from "react-icons/fa";
-import { FaMoneyBillWave, FaExchangeAlt, FaTruck } from 'react-icons/fa';
+import { FaMoneyBillWave, FaExchangeAlt, FaTruck } from "react-icons/fa";
 import { useParams } from "react-router-dom"; // Import useParams
 import {
   AiFillStar,
@@ -947,6 +950,8 @@ import {
   AiTwotoneStar,
   AiOutlineQuestionCircle,
 } from "react-icons/ai"; // Import necessary icons
+import { useWishlist } from './WishlistContext'; // Adjust the import path
+
 
 function ProductDetail() {
   const { id } = useParams(); // Get productId from URL parameters
@@ -1032,7 +1037,7 @@ function ProductDetail() {
             "https://m.media-amazon.com/images/I/71ZKcnsNHRS._SY741_.jpg",
             "https://m.media-amazon.com/images/I/81rOnPwPDoL._SY741_.jpg",
           ],
-          price:45,
+          price: 45,
           discount: "5%",
           sizes: [
             { size: "S", stock: 0 },
@@ -1248,39 +1253,34 @@ function ProductDetail() {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [currentImage, setCurrentImage] = useState(null);
-  const [pincode, setPincode] = useState('');
-  const [availabilityDeliveryMessage, setAvailabilityDeliveryMessage] = useState('');
-  const [isDeliveryAvailable, setIsDeliveryAvailable] = useState(''); 
+  const [pincode, setPincode] = useState("");
+  const [availabilityDeliveryMessage, setAvailabilityDeliveryMessage] =
+    useState("");
+  const [isDeliveryAvailable, setIsDeliveryAvailable] = useState("");
+  const { addToWishlist,removeFromWishlist,wishlistItems,isInWishlist } = useWishlist();
 
 
-    // Function to check pincode availability
-    const checkAvailability = () => {
-
-      if (pincode === '123456') {
-        setIsDeliveryAvailable(true)
-        setAvailabilityDeliveryMessage('Product is available for delivery in your area.');
-
-      } else {
-        setIsDeliveryAvailable(false)
-        setAvailabilityDeliveryMessage('Sorry, delivery is not available in this area.');
-      }
-    };
-
-
-
+console.log("wishlist items"+wishlistItems)
   useEffect(() => {
     // Find the product based on the productId from URL
     const product = productData.find(
       (product) => product.productId === parseInt(id)
     );
 
-    if (product) {
+    // if (product) {
       setSelectedProduct(product);
       setCurrentImage(product.variants[0].images[0]);
       setSelectedVariant(product.variants[0]); // Set default variant
       setSelectedSize(product.variants[0].sizes[0].size); // Set default size
-    }
+    // }
+    console.log("selevcted varient in useeffect..."+selectedVariant)
+
+
   }, [id]); // Rerun effect when id or productData changes
+
+  console.log("selevcted varient in global..."+selectedVariant)
+
+
 
   // Handler for changing the product variant by color
   const handleColorChange = (color) => {
@@ -1293,7 +1293,48 @@ function ProductDetail() {
       setSelectedVariant(variant);
       setSelectedSize(variant.sizes[0].size); // Reset size when color changes
     }
+
+   
+    console.log("selevcted varient in handleColorChange..."+selectedVariant)
+
   };
+
+
+
+
+
+
+  // Function to check pincode availability
+  const checkAvailability = () => {
+    if (pincode === "123456") {
+      setIsDeliveryAvailable(true);
+      setAvailabilityDeliveryMessage(
+        "Product is available for delivery in your area."
+      );
+    } else {
+      setIsDeliveryAvailable(false);
+      setAvailabilityDeliveryMessage(
+        "Sorry, delivery is not available in this area."
+      );
+    }
+  };
+
+
+  // Function to toggle favorite status
+  const toggleFavorite = () => {
+    console.log("selevcted varient in toggle..."+selectedProduct.productId)
+
+    if (isInWishlist(selectedProduct.productId)) {
+      removeFromWishlist(selectedProduct.productId); // Remove from wishlist if it's already a favorite
+    } else {
+      addToWishlist(selectedProduct); // Add to wishlist if it's not a favorite
+    }
+  };
+
+
+
+
+
 
   if (!selectedProduct || !selectedVariant) {
     return <Text>Loading...</Text>; // Show loading state while data is being fetched
@@ -1323,24 +1364,19 @@ function ProductDetail() {
           </Box>
           {/* Main Product Image */}
           <Box maxW="500px" maxH="500px" overflow="hidden">
-          
-
-
-        {/* Custom Tag */}
-        <Box
-          position="absolute"
-        
-          bg="pink.500"
-          color="white"
-          px={4}
-          py={2}
-          fontWeight="bold"
-          borderRadius="0 10px 10px 0"
-          clipPath="polygon(0 0, 100% 0, 85% 100%, 0% 100%)" // Tag shape
-        >
-          {selectedVariant.discount} OFF
-        </Box>
-
+            {/* Custom Tag */}
+            <Box
+              position="absolute"
+              bg="pink.500"
+              color="white"
+              px={4}
+              py={2}
+              fontWeight="bold"
+              borderRadius="0 10px 10px 0"
+              clipPath="polygon(0 0, 100% 0, 85% 100%, 0% 100%)" // Tag shape
+            >
+              {selectedVariant.discount} OFF
+            </Box>
 
             <Image
               src={currentImage}
@@ -1353,19 +1389,18 @@ function ProductDetail() {
         </Stack>
 
         {/* Right Section: Product Details */}
-        <Box flex="1"// This allows it to take the remaining space
-    // maxH="500px" // Set a maximum height to create the scrollable area
-    overflowY="auto" // Enable vertical scrolling
-    p={4} // Optional padding p={6} borderRadius="lg" bg="white"
-    >
+        <Box
+          flex="1" // This allows it to take the remaining space
+          // maxH="500px" // Set a maximum height to create the scrollable area
+          overflowY="auto" // Enable vertical scrolling
+          p={4} // Optional padding p={6} borderRadius="lg" bg="white"
+        >
           <Text fontSize="2xl" fontWeight="bold" mb={2}>
             {selectedProduct.name}
           </Text>
 
-
-
- {/* Review and Ratings */}
- <Flex align="center" mb={4}>
+          {/* Review and Ratings */}
+          <Flex align="center" mb={4}>
             <Stack direction="row" spacing={1} align="center">
               {[...Array(5)].map((_, index) => {
                 if (index < Math.floor(selectedVariant.rating)) {
@@ -1393,42 +1428,52 @@ function ProductDetail() {
               />
             </Tooltip>
 
-            <Text color={(selectedVariant?.sizes || []).some((size) => size.stock > 0) ? "green.500" : "red.500"} mx={4}>
-  {(selectedVariant?.sizes || []).some((size) => size.stock > 0)? "In Stock" : "Out of Stock"}
-</Text>
+            <Text
+              color={
+                (selectedVariant?.sizes || []).some((size) => size.stock > 0)
+                  ? "green.500"
+                  : "red.500"
+              }
+              mx={4}
+            >
+              {(selectedVariant?.sizes || []).some((size) => size.stock > 0)
+                ? "In Stock"
+                : "Out of Stock"}
+            </Text>
           </Flex>
 
-
-        {/* price section */}
+          {/* price section */}
           <Text mb={4}>{selectedProduct.description}</Text>
-          <Flex align="center" >
+          <Flex align="center">
             <Text fontSize="2xl" fontWeight="" color="pink.500" mr={4}>
               -{selectedVariant.discount} Off
             </Text>
             <Text fontSize="2xl" fontWeight="bold" mr={4}>
               ${selectedVariant.price}
             </Text>
-           
+
             {selectedVariant.shipping.cashOnDeliveryAvailable && (
-            <Badge fontFamily="sans-serif"  borderRadius="xl" colorScheme="green" my={2}>
-              Cash on Delivery Available
-            </Badge>
-          )}
-
+              <Badge
+                fontFamily="sans-serif"
+                borderRadius="xl"
+                colorScheme="green"
+                my={2}
+              >
+                Cash on Delivery Available
+              </Badge>
+            )}
           </Flex>
-          <Text fontSize="sm" fontWeight=""   display="inline">
-          MRP{' '}<Text  as="span" textDecoration="line-through" mx={1}> ${selectedProduct.basePrice}  </Text>Inclusive of all taxes
+          <Text fontSize="sm" fontWeight="" display="inline">
+            MRP{" "}
+            <Text as="span" textDecoration="line-through" mx={1}>
+              {" "}
+              ${selectedProduct.basePrice}{" "}
             </Text>
+            Inclusive of all taxes
+          </Text>
+          <Divider mb={4} borderColor="gray.700" />
 
-  
-
-
-            <Divider mb={4} borderColor="gray.700" />
-         
-
-
-
-{/* ******************************************************************************* */}
+          {/* ******************************************************************************* */}
           {/* Size Options */}
           <Text fontSize="lg" fontWeight="semibold" mb={2} mt={4}>
             Select Size:
@@ -1486,154 +1531,164 @@ function ProductDetail() {
             ))}
           </Stack>
 
-   {/* Add to Cart / Favorite */}
-   <Stack direction="row" spacing={8} mb={6} mt={6}>
+          {/* Add to Cart / Favorite */}
+          <Stack direction="row" spacing={8} mb={6} mt={6}>
             <Button
               leftIcon={<FaCartPlus />}
               colorScheme="teal"
               variant="solid"
               size="lg"
-              isDisabled={selectedVariant.sizes.every(size => size.stock === 0)} 
+              isDisabled={selectedVariant.sizes.every(
+                (size) => size.stock === 0
+              )}
               width="350px" //
             >
               Add to Cart
             </Button>
             <Button
               leftIcon={<FaHeart />}
-              colorScheme="pink"
+              colorScheme={isInWishlist(selectedProduct.productId) ? "pink" : "gray"}
               variant="outline"
               size="lg"
               width="250px" //
+              onClick={toggleFavorite} // Integrated logic here
+
             >
               Favorite
             </Button>
           </Stack>
           <Divider mb={4} borderColor="gray.700" />
 
+          {/* ********************************************************/}
 
-
-
-
-
-
-
-
-{/* ******************************************************* */}
-
-  <VStack align="flex-start" spacing={4} maxW="600px"  my={5}>
-        {/* Delivery Location Heading */}
-        <Text fontSize="xl" fontWeight="semibold">
-          Select Delivery Location
-        </Text>
-
-        {/* Custom Input Box with Light Gray Background */}
-        <InputGroup w="300px">
-          <Input
-            placeholder="Enter pincode"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-            bg="gray.100" // Light gray background color
-            borderRadius=""
-            border="none"
-            variant="unstyled" 
-            h="40px" // Set consistent height for input
-            _hover={{ borderBottom: "2px solid #d53f8c", }} // Underline on hover
-            _focus={{ borderBottom: "2px solid #d53f8c", bg: "blue.100" }} // Underline on focus
-            transition="all 0.2s ease-in-out" // Smooth transition effect
-            pr="4.5rem" // Space for the Apply text
-          />
-          <InputRightElement width="4.5rem">
-            <Text
-              color="pink.500"
-              fontWeight="bold"
-              cursor="pointer"
-              onClick={checkAvailability}
-            >
-              Apply
+          <VStack align="flex-start" spacing={4} maxW="600px" my={5}>
+            {/* Delivery Location Heading */}
+            <Text fontSize="xl" fontWeight="semibold">
+              Select Delivery Location
             </Text>
-          </InputRightElement>
-        </InputGroup>
-        <Text fontSize="sm" color={isDeliveryAvailable ? 'green.500' : 'red.500'}>
-          {availabilityDeliveryMessage}
-        </Text>
-      </VStack>
+            <InputGroup w="300px">
+              <Input
+                placeholder="Enter pincode"
+                value={pincode}
+                onChange={(e) => setPincode(e.target.value)}
+                bg="gray.100"
+                borderRadius=""
+                border="none"
+                variant="unstyled"
+                h="40px" // Set consistent height for input
+                _hover={{ borderBottom: "2px solid #d53f8c" }} // Underline on hover
+                _focus={{ borderBottom: "2px solid #d53f8c", bg: "blue.100" }} // Underline on focus
+                transition="all 0.2s ease-in-out" // Smooth transition effect
+                pr="4.5rem" // Space for the Apply text
+              />
+              <InputRightElement width="4.5rem">
+                <Text
+                  color="pink.500"
+                  fontWeight="bold"
+                  cursor="pointer"
+                  onClick={checkAvailability}
+                >
+                  Apply
+                </Text>
+              </InputRightElement>
+            </InputGroup>
+            <Text
+              fontSize="sm"
+              color={isDeliveryAvailable ? "green.500" : "red.500"}
+            >
+              {availabilityDeliveryMessage}
+            </Text>
+          </VStack>
 
-     {/* Delivery-section-card  */}
-     <Stack
-      direction={{ base: 'column', md: 'row' }} // Column on mobile, row on larger screens
-      spacing={4} // Reduce spacing between cards
-      mt={4}
-      wrap="wrap"
-      justify="flex-start"
-      align="center"
-    >
-      {/* Card 1: Cash on Delivery */}
-      <Box
-        borderWidth="1px"
-        borderRadius="md"
-        p={2} // Reduce padding
-        width={{ base: '100%', md: '150px' }} // Decrease width to 150px on larger screens
-        boxShadow="sm" // Use a smaller box shadow
-        _hover={{ boxShadow: 'md', borderColor: 'teal.500' }} // Hover effect
-        textAlign="center"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-      >
-        <Icon as={FaMoneyBillWave} boxSize={5} color="green.500" mb={1} /> {/* Smaller icon size */}
-        <Text fontSize="sm" fontWeight="bold">Cash on Delivery</Text>
-        <Text mt={1} fontSize="xs" color="gray.600">COD available</Text>
-        <Text mt={1} fontSize="xs" color="blue.500" cursor="pointer">Know More</Text>
-      </Box>
+          {/* Delivery-section-card  */}
+          <Stack
+            direction={{ base: "column", md: "row" }} // Column on mobile, row on larger screens
+            spacing={4} // Reduce spacing between cards
+            mt={4}
+            wrap="wrap"
+            justify="flex-start"
+            align="center"
+          >
+            {/* Card 1: Cash on Delivery */}
+            <Box
+              borderWidth="1px"
+              borderRadius="md"
+              p={2} // Reduce padding
+              width={{ base: "100%", md: "150px" }} // Decrease width to 150px on larger screens
+              boxShadow="sm" // Use a smaller box shadow
+              _hover={{ boxShadow: "md", borderColor: "teal.500" }} // Hover effect
+              textAlign="center"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+            >
+              <Icon as={FaMoneyBillWave} boxSize={5} color="green.500" mb={1} />{" "}
+              {/* Smaller icon size */}
+              <Text fontSize="sm" fontWeight="bold">
+                Cash on Delivery
+              </Text>
+              <Text mt={1} fontSize="xs" color="gray.600">
+                COD available
+              </Text>
+              <Text mt={1} fontSize="xs" color="blue.500" cursor="pointer">
+                Know More
+              </Text>
+            </Box>
 
-      {/* Card 2: 7-day Return & Size Exchange */}
-      <Box
-        borderWidth="1px"
-        borderRadius="md"
-        p={2}
-        width={{ base: '100%', md: '150px' }}
-        boxShadow="sm"
-        _hover={{ boxShadow: 'md', borderColor: 'teal.500' }}
-        textAlign="center"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-      >
-        <Icon as={FaExchangeAlt} boxSize={5} color="orange.400" mb={1} />
-        <Text fontSize="sm" fontWeight="bold">7-day Return & Exchange</Text>
-        <Text mt={1} fontSize="xs" color="gray.600">Free size exchange</Text>
-        <Text mt={1} fontSize="xs" color="blue.500" cursor="pointer">Know More</Text>
-      </Box>
+            {/* Card 2: 7-day Return & Size Exchange */}
+            <Box
+              borderWidth="1px"
+              borderRadius="md"
+              p={2}
+              width={{ base: "100%", md: "150px" }}
+              boxShadow="sm"
+              _hover={{ boxShadow: "md", borderColor: "teal.500" }}
+              textAlign="center"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+            >
+              <Icon as={FaExchangeAlt} boxSize={5} color="orange.400" mb={1} />
+              <Text fontSize="sm" fontWeight="bold">
+                7-day Return & Exchange
+              </Text>
+              <Text mt={1} fontSize="xs" color="gray.600">
+                Free size exchange
+              </Text>
+              <Text mt={1} fontSize="xs" color="blue.500" cursor="pointer">
+                Know More
+              </Text>
+            </Box>
 
-      {/* Card 3: Delivery by 2 Oct */}
-      <Box
-        borderWidth="1px"
-        borderRadius="md"
-        p={2}
-        width={{ base: '100%', md: '150px' }}
-        boxShadow="sm"
-        _hover={{ boxShadow: 'md', borderColor: 'teal.500' }}
-        textAlign="center"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-      >
-        <Icon as={FaTruck} boxSize={5} color="blue.500" mb={1} />
-        <Text fontSize="sm" fontWeight="bold">Delivery by 2 Oct</Text>
-        <Text mt={1} fontSize="xs" color="gray.600">Estimated delivery</Text>
-        <Text mt={1} fontSize="xs" color="blue.500" cursor="pointer">Know More</Text>
-      </Box>
-    </Stack>
-     
+            {/* Card 3: Delivery by 2 Oct */}
+            <Box
+              borderWidth="1px"
+              borderRadius="md"
+              p={2}
+              width={{ base: "100%", md: "150px" }}
+              boxShadow="sm"
+              _hover={{ boxShadow: "md", borderColor: "teal.500" }}
+              textAlign="center"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+            >
+              <Icon as={FaTruck} boxSize={5} color="blue.500" mb={1} />
+              <Text fontSize="sm" fontWeight="bold">
+                Delivery by 2 Oct
+              </Text>
+              <Text mt={1} fontSize="xs" color="gray.600">
+                Estimated delivery
+              </Text>
+              <Text mt={1} fontSize="xs" color="blue.500" cursor="pointer">
+                Know More
+              </Text>
+            </Box>
+          </Stack>
 
-      
-
-
-
-
-{/* ************************************************************************************************************ */}
-  {/* Offers */}
-  <Box my={4}>
+          {/* ************************************************************************************************************ */}
+          {/* Offers */}
+          <Box my={4}>
             <Text fontSize="lg" fontWeight="semibold" mb={2}>
               Available Offers:
             </Text>
@@ -1643,33 +1698,25 @@ function ProductDetail() {
               </Text>
             ))}
             {selectedVariant.shipping.cashOnDeliveryAvailable && (
-            <Text>
-            <Icon as={FaTags} color="pink.500" /> Cash on Delivery Available
-            </Text>
-          )}
+              <Text>
+                <Icon as={FaTags} color="pink.500" /> Cash on Delivery Available
+              </Text>
+            )}
           </Box>
-
 
           {/* Shipping Information */}
           <Box my={4}>
-          <Text fontSize="lg" fontWeight="semibold" mb={2}>
-            Shipping Information:
-          </Text>
-          <Text mb={2}>
-            Delivery By: {selectedVariant.shipping.deliveryDate}
-          </Text>
-          <Text mb={4}>
-            Shipping Options: {selectedVariant.shipping.shippingOptions.join(", ")}
-          </Text>
+            <Text fontSize="lg" fontWeight="semibold" mb={2}>
+              Shipping Information:
+            </Text>
+            <Text mb={2}>
+              Delivery By: {selectedVariant.shipping.deliveryDate}
+            </Text>
+            <Text mb={4}>
+              Shipping Options:{" "}
+              {selectedVariant.shipping.shippingOptions.join(", ")}
+            </Text>
           </Box>
-
-
-       
-       
-
-
-
-
         </Box>
       </Flex>
     </Box>

@@ -83,6 +83,8 @@ import ProductCard from './ProductCard';
 import Filters from '../Filters';
 import Sorting from '../Sorting';
 import axios from 'axios';
+import { useWishlist } from './WishlistContext'; // Adjust the import path
+
  // Sample product data
  const productDataList = [
   {
@@ -346,6 +348,7 @@ const ProductListings = () => {
   const [displayMode, setDisplayMode] = useState('grid'); // or 'list'
   // const [sortedProducts, setSortedProducts] = useState([]);
 
+  const { addToWishlist } = useWishlist();
 
 
   // Assuming products are sorted in some logic
@@ -354,6 +357,8 @@ const ProductListings = () => {
     name: product.name,
     brand: product.brand,
     basePrice: product.basePrice,
+    price: product.price,
+    discount :product.discount,
     variants: product.variants,
     description: product.description,
     productId :product.productId,

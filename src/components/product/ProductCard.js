@@ -96,18 +96,41 @@ import {
   AiFillHeart,   // Import filled heart icon for favorites
 } from "react-icons/ai"; // Import necessary icons
 
+import ReviewAndRating from './ReviewAndRating';
+import { useWishlist } from './WishlistContext'; // Adjust the import path
+
+
+
 
 const ProductCard = ({ product }) => {
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  // const [isFavorite, setIsFavorite] = useState(false);
+  const { addToWishlist,removeFromWishlist,wishlistItems,isInWishlist } = useWishlist();
 
   // const cleanImageUrl = product.imageURL.replace(/^["']+|["']+$/g, "");  
 
   // Function to toggle favorite status
+  // const toggleFavorite = (e) => {
+  //   e.stopPropagation(); // Prevents triggering the Link on click
+  //   addToWishlist(product); 
+  //   setIsFavorite((prev) => !prev); // Toggle the favorite state
+  // };
+
+  // Check if the product is already in the wishlist
+  // const isFavorite = wishlistItems.some(item => item.productId === product.productId);
+
+  // Function to toggle favorite status
   const toggleFavorite = (e) => {
     e.stopPropagation(); // Prevents triggering the Link on click
-    setIsFavorite((prev) => !prev); // Toggle the favorite state
+    if (isInWishlist(product.productId)) {
+      removeFromWishlist(product.productId); // Remove from wishlist if it's already a favorite
+    } else {
+      addToWishlist(product); // Add to wishlist if it's not a favorite
+    }
   };
+  
+
+
   // console.log("Product Is is  ..............."+product.productId)
   // console.log("Product variants  ..............."+product.variants[0].images[0])
 
@@ -128,8 +151,8 @@ const ProductCard = ({ product }) => {
     >
       {/* Favorite Icon */}
       <Icon
-        as={isFavorite ? AiFillHeart : AiOutlineHeart} // Toggle between filled and outline heart
-        color={isFavorite ? "red.500" : "gray.500"} // Change color based on favorite state
+        as={isInWishlist(product.productId) ? AiFillHeart : AiOutlineHeart} // Toggle between filled and outline heart
+        color={isInWishlist(product.productId) ? "red.500" : "gray.500"} // Change color based on favorite state
         position="absolute" // Position the icon absolutely
         top={4} // Distance from the top
         right={4} // Distance from the right
@@ -165,7 +188,7 @@ const ProductCard = ({ product }) => {
           </Flex>
 
           {/* Review and Ratings */}
-          <Flex align="center" mb={4}>
+          {/* <Flex align="center" mb={4}>
             <Stack direction="row" spacing={1} align="center">
               {[...Array(5)].map((_, index) => {
                 if (index < Math.floor(product.variants[0].rating)) {
@@ -181,10 +204,18 @@ const ProductCard = ({ product }) => {
               })}
               <Text color="gray.500" fontSize="sm">
                 ({product.variants[0].reviewsCount || 0} Reviews){" "}
-                {/* Display reviews count */}
               </Text>
             </Stack>
-          </Flex>
+          </Flex> */}
+
+ {/* Review and Ratings - using the new component */}
+ <ReviewAndRating
+            rating={product.variants[0].rating} // Pass variant rating
+            reviewsCount={product.variants[0].reviewsCount} // Pass variant reviews count
+          />
+
+
+
 
           <Button variant="solid" colorScheme="teal" width="100%" mt={2}>
             Add to Cart

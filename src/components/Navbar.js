@@ -20,14 +20,27 @@ import { FaUser, FaHeart, FaShoppingCart } from "react-icons/fa";
 import logoImage from "../images/logo.png";
 import DrawerToggle from "./DrawerToggle"; // Import DrawerToggle component
 // import ProductCard1 from "./components/Cards/ProductCard1";
+import { useNavigate } from 'react-router-dom';
+
+import { useWishlist } from './product/WishlistContext'; // Adjust the import path
 
 
 function Navbar() {
   const displayIcons = useBreakpointValue({ base: "none", md: "flex" });
   const displayMenu = useBreakpointValue({ base: "none", md: "block" });
   const flexDirection = useBreakpointValue({ base: "column", md: "row" });
+  const navigate = useNavigate();
+
+  const { wishlistItems } = useWishlist();
 
 
+  const handleWishlistClick = () => {
+    // Implement your logic here to show the wishlist
+    console.log('Wishlist items:', wishlistItems);
+    navigate('/wishlist'); // Navigate to the Wishlist component
+
+    // You can redirect to a wishlist page or show a modal
+  };
 
   return (
     <Box bg="black" boxShadow="sm" 
@@ -124,6 +137,7 @@ function Navbar() {
             icon={<FaHeart />}
             variant="ghost"
             color="white "
+            onClick={handleWishlistClick}
           />
           <Box position="relative">
             <IconButton
