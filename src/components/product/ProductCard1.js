@@ -1267,18 +1267,36 @@ console.log("wishlist items"+wishlistItems)
       (product) => product.productId === parseInt(id)
     );
 
-    // if (product) {
+    if (product) {
       setSelectedProduct(product);
       setCurrentImage(product.variants[0].images[0]);
       setSelectedVariant(product.variants[0]); // Set default variant
       setSelectedSize(product.variants[0].sizes[0].size); // Set default size
-    // }
+    }
     console.log("selevcted varient in useeffect..."+selectedVariant)
 
 
   }, [id]); // Rerun effect when id or productData changes
 
-  console.log("selevcted varient in global..."+selectedVariant)
+
+  // console.log("wishlist items"+wishlistItems)
+  // useEffect(() => {
+  //   // Find the product based on the productId from URL
+  //   const product = productData.find(
+  //     (product) => product.productId === parseInt(id)
+  //   );
+
+  //   if (product) {
+  //     setSelectedProduct(product);
+  //     setCurrentImage(product.variants[0].images[0]);
+  //     setSelectedVariant(product.variants[0]); // Set default variant
+  //     setSelectedSize(product.variants[0].sizes[0].size); // Set default size
+  //   }
+  //   console.log("selevcted varient in useeffect..."+selectedVariant)
+
+
+  // }, []);
+  // console.log("selevcted varient in global..."+selectedVariant)
 
 
 
@@ -1321,15 +1339,53 @@ console.log("wishlist items"+wishlistItems)
 
 
   // Function to toggle favorite status
-  const toggleFavorite = () => {
-    console.log("selevcted varient in toggle..."+selectedProduct.productId)
+  // const toggleFavorite = () => {
+  //   console.log("selevcted varient in toggle..."+selectedProduct.productId)
 
-    if (isInWishlist(selectedProduct.productId)) {
-      removeFromWishlist(selectedProduct.productId); // Remove from wishlist if it's already a favorite
+  //   if (isInWishlist(selectedProduct.productId)) {
+  //     removeFromWishlist(selectedProduct.productId); // Remove from wishlist if it's already a favorite
+  //   } else {
+  //     addToWishlist(selectedProduct); // Add to wishlist if it's not a favorite
+  //   }
+  // };
+
+  const toggleFavorite = () => {
+    console.log("Selected Product ID:", selectedProduct.productId);
+    console.log("Selected Variant ID:", selectedVariant?.variantId); // Ensure this is the correct ID
+    console.log("Selected Variant:", selectedVariant); // Log the entire selectedVariant object
+
+  
+    // Generate a unique identifier based on productId and variantId (or variant properties)
+    // const wishlistIdentifier = createUniqueIdentifier(selectedProduct.productId, selectedVariant.id);
+  
+    // Check if the current product variant combination is in the wishlist
+    if (isInWishlist(selectedProduct.productId, selectedVariant.variantId)) {
+      console.log("Removing from wishlist");
+      removeFromWishlist(selectedProduct.productId, selectedVariant.variantId);
     } else {
-      addToWishlist(selectedProduct); // Add to wishlist if it's not a favorite
+      // Add to wishlist if it's not already added
+
+      console.log("Adding to wishlist");
+
+      const wishlistItem = {
+        ...selectedProduct,
+        // productId: selectedProduct.productId,
+        // name: selectedProduct.name,
+        // brand: selectedProduct.brand,
+        // basePrice: selectedProduct.basePrice,
+        // description: selectedProduct.description,
+        ...selectedVariant,  // Include the current variant in the wishlist item
+        selectedSize,     // Include the selected size
+           // Store the unique identifier for easy lookup
+      };
+      addToWishlist(wishlistItem);
+
+      console.log("Current wishlist items:", wishlistItems);
+
     }
   };
+  
+
 
 
 
@@ -1547,7 +1603,7 @@ console.log("wishlist items"+wishlistItems)
             </Button>
             <Button
               leftIcon={<FaHeart />}
-              colorScheme={isInWishlist(selectedProduct.productId) ? "pink" : "gray"}
+              colorScheme={isInWishlist(selectedProduct.productId, selectedVariant.variantId) ? "pink" : "gray"}
               variant="outline"
               size="lg"
               width="250px" //

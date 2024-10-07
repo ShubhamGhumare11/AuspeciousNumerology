@@ -42,7 +42,7 @@ const WishlistComponent = () => {
                 cursor="pointer"
                 _hover={{ color: "red.500" }}
                 onClick={() => {
-                  removeFromWishlist(item.productId);
+                  removeFromWishlist(item.productId, item.variantId);
                   toast({
                     title: "Removed from Wishlist.",
                     description: `${item.name} has been removed from your wishlist.`,
@@ -72,16 +72,16 @@ const WishlistComponent = () => {
 
                 {/* Discount and Price Information */}
                 <Flex align="center" gap={2}>
-                  {item.variants[0].discount && (
+                  {item.discount && (
                     <Text color="red.400" fontSize="md">
-                      {item.variants[0].discount}% OFF
+                      {item.discount}% OFF
                     </Text>
                   )}
                   <Text fontSize="lg" textDecoration="line-through" color="gray.500">
                     ${item.basePrice}
                   </Text>
                   <Text fontSize="lg" fontWeight="bold">
-                    ${item.variants[0].price} {/* Show selling price if available */}
+                    ${item.price} {/* Show selling price if available */}
                   </Text>
                 </Flex>
 
