@@ -25,3 +25,12 @@ const ReviewAndRating = ({ rating, reviewsCount }) => {
 };
 
 export default ReviewAndRating;
+
+
+
+
+
+
+
+
+

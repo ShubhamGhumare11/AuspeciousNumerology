@@ -20,7 +20,7 @@ import { FaUser, FaHeart, FaShoppingCart } from "react-icons/fa";
 import logoImage from "../images/logo.png";
 import DrawerToggle from "./DrawerToggle"; // Import DrawerToggle component
 // import ProductCard1 from "./components/Cards/ProductCard1";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useWishlist } from './product/WishlistContext'; // Adjust the import path
 
@@ -68,12 +68,13 @@ function Navbar() {
           <DrawerToggle/> 
         </Box>
 
-
+        <Link to="/"> 
         {/* Brand Name */}
         <Box fontWeight="bold" fontSize="lg" color="white ">
           {/* <Image src={logoImage} alt="MyBrand Logo"   width="20%" height="auto" style={{ padding: 0, margin: 0 , display: 'inline-block'}} /> */}
           MyBrand®
         </Box>
+        </Link>
 
         {/* Category Dropdown and Search Bar */}
         <Flex flex="1" mx={4} alignItems="center" flexDirection={{ base: "column", md: "row" }}>

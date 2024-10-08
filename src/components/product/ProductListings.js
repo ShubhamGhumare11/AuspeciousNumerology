@@ -344,52 +344,98 @@ import { useWishlist } from './WishlistContext'; // Adjust the import path
   },
 ];
 
+// const ProductListings = () => {
+//   const [displayMode, setDisplayMode] = useState('grid'); // or 'list'
+//   // const [sortedProducts, setSortedProducts] = useState([]);
+
+//   const { addToWishlist } = useWishlist();
+
+
+//   // Assuming products are sorted in some logic
+//   const sortedProducts = productDataList.map(product => ({
+//     id: product.productId,
+//     name: product.name,
+//     brand: product.brand,
+//     basePrice: product.basePrice,
+//     price: product.price,
+//     discount :product.discount,
+//     variants: product.variants,
+//     description: product.description,
+//     productId :product.productId,
+//     images: product.variants[0].images[0],
+  
+//   }));
+
+// // console.log()
+
+
+//   return (
+//     <Flex  bg='' direction={{ base: 'column', lg: 'row' }} p={4} spacing={4}>
+//       <Box  flex={{ base: 'none', lg: '1' }} mb={{ base: 4, lg: 0 }}>
+//         <Filters />
+//         <Sorting />
+//       </Box>
+//       <Box flex="2">
+//         <Box mt={0} ml={2}>
+     
+//             <SimpleGrid columns={{ base: 1, sm: 2, md: 2, lg: 3, xl: 3 }}  spacing={4}>
+//               {sortedProducts.map(product => (
+//                 <ProductCard key={product.id} product={product} />
+//               ))}
+//             </SimpleGrid>
+       
+        
+//         </Box>
+//       </Box>
+//     </Flex>
+//   );
+// };
+
+// export default ProductListings;
+
+
+
 const ProductListings = () => {
   const [displayMode, setDisplayMode] = useState('grid'); // or 'list'
-  // const [sortedProducts, setSortedProducts] = useState([]);
-
   const { addToWishlist } = useWishlist();
 
-
-  // Assuming products are sorted in some logic
   const sortedProducts = productDataList.map(product => ({
     id: product.productId,
     name: product.name,
     brand: product.brand,
     basePrice: product.basePrice,
     price: product.price,
-    discount :product.discount,
+    discount: product.discount,
     variants: product.variants,
     description: product.description,
-    productId :product.productId,
+    productId: product.productId,
     images: product.variants[0].images[0],
-  
   }));
 
-// console.log()
-
-
   return (
-    <Flex  bg='' direction={{ base: 'column', lg: 'row' }} p={4} spacing={4}>
-      <Box  flex={{ base: 'none', lg: '1' }} mb={{ base: 4, lg: 0 }}>
+    <Flex
+      direction={{ base: 'column', lg: 'row' }}
+      p={4}
+      mx={10}
+      spacing={10}
+    >
+      {/* Filters and Sorting on the left */}
+      <Box flex={{ base: 'none', lg: '1' }} mb={{ base: 4, lg: 0 }}>
         <Filters />
         <Sorting />
       </Box>
-      <Box flex="3">
+
+      {/* Products display area */}
+      <Box flex="2">
         <Box mt={0} ml={2}>
-          {displayMode === 'grid' ? (
-            <SimpleGrid columns={{ base: 1, sm: 2, md: 2, lg: 3, xl: 3 }}  spacing={4}>
-              {sortedProducts.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </SimpleGrid>
-          ) : (
-            <Stack spacing={4}>
-              {sortedProducts.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </Stack>
-          )}
+          <SimpleGrid 
+            columns={{ base: 2, sm: 2, md: 2, lg: 3, xl: 4 }} // Adjusted for extra-large screens
+            spacing={{ base: 4, sm: 6, md: 8, lg: 10 }} // Responsive spacing
+          >
+            {sortedProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </SimpleGrid>
         </Box>
       </Box>
     </Flex>

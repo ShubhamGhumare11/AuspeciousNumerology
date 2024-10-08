@@ -1,143 +1,47 @@
-
-  
-  
-  // import React from 'react';
-// import { Flex,Box, Image, Text, Badge, Button, VStack , Icon,
-//   Stack,} from '@chakra-ui/react';
-//   import { AiFillStar } from "react-icons/ai";
-
-
-// const ProductCard = ({ product }) => {
-
-
-//   const cleanImageUrl = product.imageURL.replace(/^["']+|["']+$/g, "");
-
-//   return (
-//     <Box
-//       borderWidth="1px"
-//       borderRadius="lg"
-//       overflow="hidden"
-//     //   bgGradient="linear-gradient(180deg, #f7f7f7 0%, #ffffff 100%)"
-//       // bgGradient="linear-gradient(90deg, #F1D3CE 0%, #E6A4B4 100%)"
-//       boxShadow="md"
-//       p={4}
-//       textAlign="center"
-//       transition="all 0.2s ease-in-out"
-//       _hover={{ boxShadow: 'lg', transform: 'scale(1.05)' }}
-//     >
-//       <Image
-//         src={cleanImageUrl}
-//         alt={product.title}
-//         boxSize="200px"
-//         objectFit="cover"
-//         borderRadius="md"
-//       />
-
-
-// <Flex justifyContent="space-between" alignItems="center" mt="4">
-
-
-// </Flex>
-
-
-//       <VStack spacing={2} align="start" mt={4}>
-//         <Text fontWeight="bold" fontSize="lg">
-//           {product.title}
-//         </Text>
-//         <Text fontSize="md" fontWeight="bold" color="gray.600">
-//           ${product.price}
-//         </Text>
-//         {/* <Text fontSize="sm" color="gray.500">
-//           Ratings: {product.ratings}
-//         </Text> */}
-//         <Stack direction="row" spacing={1} align="center">
-//             {/* Rendering star rating */}
-//             <Icon as={AiFillStar} color="yellow.400" />
-//             <Icon as={AiFillStar} color="yellow.400" />
-//             <Icon as={AiFillStar} color="yellow.400" />
-//             <Icon as={AiFillStar} color="yellow.400" />
-//             <Icon as={AiFillStar} color="gray.400" />
-//             {/* <Text>({product.reviews})</Text> */}
-//           </Stack>
-//         <Button
-//           variant="solid"
-//           colorScheme="cyan"
-//           mt={2}
-//           // bgGradient="linear-gradient(90deg, #FAEDCE 0%, #B5CFB7 100%)"
-//           // _hover={{ bgGradient: 'linear-gradient(90deg, #007ac1 0%, #03a9f4 100%)' }}
-//         >
-//           Add to Cart
-//         </Button>
-//       </VStack>
-
-
-
-//     </Box>
-//   );
-// };
-
-// export default ProductCard;
-
-
-import React ,{useState}from 'react';
-import { Flex, Box, Image, Text, Button, VStack, Icon, Stack } from '@chakra-ui/react';
-import { Link } from 'react-router-dom'; // Use Link for navigation
+import React, { useState } from "react";
 import {
-  
-  
-  
-  AiOutlineQuestionCircle,
-} from "react-icons/ai"; // Import necessary icons
+  Flex,
+  Box,
+  Image,
+  Text,
+  Button,
+  VStack,
+  Icon,
+  Stack,
+} from "@chakra-ui/react";
+import { Link } from "react-router-dom";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
 import {
   AiFillStar,
   AiOutlineStar,
   AiTwotoneStar,
-  AiOutlineHeart, // Import heart icon for favorites
-  AiFillHeart,   // Import filled heart icon for favorites
-} from "react-icons/ai"; // Import necessary icons
+  AiFillHeart,
+  AiOutlineHeart,
+} from "react-icons/ai";
 
-import ReviewAndRating from './ReviewAndRating';
-import { useWishlist } from './WishlistContext'; // Adjust the import path
-
-
-
+import ReviewAndRating from "./ReviewAndRating";
+import { useWishlist } from "./WishlistContext";
 
 const ProductCard = ({ product }) => {
+  const { addToWishlist, removeFromWishlist, wishlistItems, isInWishlist } =
+    useWishlist();
 
-  // const [isFavorite, setIsFavorite] = useState(false);
-  const { addToWishlist,removeFromWishlist,wishlistItems,isInWishlist } = useWishlist();
-
-  // const cleanImageUrl = product.imageURL.replace(/^["']+|["']+$/g, "");  
-
-  // Function to toggle favorite status
-  // const toggleFavorite = (e) => {
-  //   e.stopPropagation(); // Prevents triggering the Link on click
-  //   addToWishlist(product); 
-  //   setIsFavorite((prev) => !prev); // Toggle the favorite state
-  // };
-
-  // Check if the product is already in the wishlist
-  // const isFavorite = wishlistItems.some(item => item.productId === product.productId);
+  // const cleanImageUrl = product.imageURL.replace(/^["']+|["']+$/g, "");
 
   // Function to toggle favorite status
   const toggleFavorite = (e) => {
-    e.stopPropagation(); // Prevents triggering the Link on click
+    e.stopPropagation();
     if (isInWishlist(product.productId)) {
-      removeFromWishlist(product.productId); // Remove from wishlist if it's already a favorite
+      removeFromWishlist(product.productId);
     } else {
-      addToWishlist(product); // Add to wishlist if it's not a favorite
+      addToWishlist(product);
     }
   };
-  
-
 
   // console.log("Product Is is  ..............."+product.productId)
   // console.log("Product variants  ..............."+product.variants[0].images[0])
 
-  
-
   return (
- 
     <Box
       borderWidth="1px"
       borderRadius="lg"
@@ -146,43 +50,47 @@ const ProductCard = ({ product }) => {
       textAlign="left"
       transition="all 0.2s ease-in-out"
       _hover={{ boxShadow: "lg", transform: "scale(1.05)" }}
-      width="250px" // Fixing the card width for consistency
-      position="relative" // Set position to relative for positioning the favorite icon
+      width={{ base: "100%", sm: "200px", md: "250px" }} // Responsive width
+     
+      // width="100%"
+       maxW="250px" 
+      position="relative"
+      mx="auto" // Center the card
+
     >
       {/* Favorite Icon */}
       <Icon
-        as={isInWishlist(product.productId) ? AiFillHeart : AiOutlineHeart} // Toggle between filled and outline heart
-        color={isInWishlist(product.productId) ? "red.500" : "gray.500"} // Change color based on favorite state
-        position="absolute" // Position the icon absolutely
-        top={4} // Distance from the top
-        right={4} // Distance from the right
-        onClick={toggleFavorite} // Call the toggle function
-        cursor="pointer" // Change cursor to pointer for better UX
-        boxSize={6} // Set size for the icon
-        zIndex={1} // Ensure the icon is above other elements
+        as={isInWishlist(product.productId) ? AiFillHeart : AiOutlineHeart}
+        color={isInWishlist(product.productId) ? "red.500" : "gray.500"}
+        position="absolute"
+        top={4}
+        right={4}
+        onClick={toggleFavorite}
+        cursor="pointer"
+        boxSize={{ base: 5, md: 6 }} // Responsive icon size
+        zIndex={1}
       />
 
       {/* Link wrapping the entire card for navigation */}
       <Link to={`/product/${product.productId}`}>
-        {/* Image */}
         <Image
-          src={product.variants[0].images[0]} // Image source
-          alt={product.variants[0].images[0]}
+          src={product.variants[0].images[0]}
+          // alt={product.variants[0].images[0]}
           width="100%"
-          height="200px"
+          height={{ base: "150px", md: "200px" }} // Responsive image height
           objectFit="contain"
         />
 
         <VStack spacing={3} align="stretch" p={4}>
-          <Text fontWeight="bold" fontSize="md" noOfLines={2}>
+          <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} noOfLines={2}>
             {product.name}
           </Text>
 
           <Flex>
-            <Text fontSize="lg" fontWeight="" color="pink.500" mr={5}>
+            <Text fontWeight=""  fontSize={{ base: "sm", md: "lg" }} color="pink.500" mr={5}>
               -{product.variants[0].discount}
             </Text>
-            <Text fontSize="lg" fontWeight="bold" color="" mr={5}>
+            <Text fontSize={{ base: "sm", md: "lg" }}fontWeight="bold" color="" mr={5}>
               ${product.basePrice}
             </Text>
           </Flex>
@@ -208,22 +116,17 @@ const ProductCard = ({ product }) => {
             </Stack>
           </Flex> */}
 
- {/* Review and Ratings - using the new component */}
- <ReviewAndRating
-            rating={product.variants[0].rating} // Pass variant rating
-            reviewsCount={product.variants[0].reviewsCount} // Pass variant reviews count
+          {/* Review and Ratings - using the new component */}
+          <ReviewAndRating
+            rating={product.variants[0].rating}
+            reviewsCount={product.variants[0].reviewsCount}
           />
-
-
-
-
           <Button variant="solid" colorScheme="teal" width="100%" mt={2}>
             Add to Cart
           </Button>
         </VStack>
       </Link>
     </Box>
-  
   );
 };
 

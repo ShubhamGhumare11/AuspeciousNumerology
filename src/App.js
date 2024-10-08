@@ -78,13 +78,12 @@ import Banner from "./components/Banner";
 import ProductListings from "./components/product/ProductListings";
 import Footer from "./components/Footer";
 import LiveShopping from "./components/LiveShoppingPage";
-import ProductCard1 from "./components/product/ProductCard1";
 import ProductCarousel1 from "./components/Cards/ProductCarousel1";
 import SampleProductCard1 from "./components/Cards/SampleProductCard1";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Card1 from "./components/Cards/Card1";
-import ProductDetail from "./components/product/ProductCard1";
+import ProductDetail from "./components/product/ProductDetail";
 import Layout from "./components/Layout";
+import FeatureCards from "./components/Cards/FeatureCards";
 import { WishlistProvider } from './components/product/WishlistContext'; // Adjust the path if necessary
 import WishlistComponent from './components/product/WishlistComponent '; // Import your wishlist component
 
@@ -113,6 +112,7 @@ function App() {
               <BestSellers />
               <ProductListings />
               <LiveShopping />
+              <FeatureCards/>
             </>
           }
         />
