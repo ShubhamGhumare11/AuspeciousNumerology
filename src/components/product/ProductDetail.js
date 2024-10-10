@@ -19,23 +19,25 @@ import {
   InputGroup,
   InputRightElement,
 } from "@chakra-ui/react";
-import { CheckIcon, CloseIcon } from "@chakra-ui/icons"; 
+import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { Tag, TagLeftIcon, TagLabel } from "@chakra-ui/react";
 
 import { FaCircle, FaCartPlus, FaHeart, FaTags } from "react-icons/fa";
 import { FaMoneyBillWave, FaExchangeAlt, FaTruck } from "react-icons/fa";
-import { useParams } from "react-router-dom"; 
+import { useParams } from "react-router-dom";
 import {
   AiFillStar,
   AiOutlineStar,
   AiTwotoneStar,
   AiOutlineQuestionCircle,
-} from "react-icons/ai"; 
-import { useWishlist } from './WishlistContext'; 
+} from "react-icons/ai";
+import { Link, useNavigate } from "react-router-dom";
 
+import { useWishlist } from "./WishlistContext";
+import { useCart } from "./CartContext"; // Adjust the path accordingly
 
 function ProductDetail() {
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   // Sample product data
   const productData = [
@@ -329,7 +331,6 @@ function ProductDetail() {
     },
   ];
 
- 
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
@@ -338,10 +339,12 @@ function ProductDetail() {
   const [availabilityDeliveryMessage, setAvailabilityDeliveryMessage] =
     useState("");
   const [isDeliveryAvailable, setIsDeliveryAvailable] = useState("");
-  const { addToWishlist,removeFromWishlist,wishlistItems,isInWishlist } = useWishlist();
+  const { addToWishlist, removeFromWishlist, wishlistItems, isInWishlist } =
+    useWishlist();
+  const { addToCart, isInCart, removeFromCart } = useCart();
+  const navigate = useNavigate();
 
-
-console.log("wishlist items"+wishlistItems)
+  console.log("wishlist items" + wishlistItems);
   useEffect(() => {
     // Find the product based on the productId from URL
     const product = productData.find(
@@ -351,18 +354,11 @@ console.log("wishlist items"+wishlistItems)
     if (product) {
       setSelectedProduct(product);
       setCurrentImage(product.variants[0].images[0]);
-      setSelectedVariant(product.variants[0]); 
-      setSelectedSize(product.variants[0].sizes[0].size); 
+      setSelectedVariant(product.variants[0]);
+      setSelectedSize(product.variants[0].sizes[0].size);
     }
-    console.log("selevcted varient in useeffect..."+selectedVariant)
-
-
-  }, [id]); 
-
-
-  
-
-
+    console.log("selevcted varient in useeffect..." + selectedVariant);
+  }, [id]);
 
   const handleColorChange = (color) => {
     const variant = selectedProduct.variants.find(
@@ -372,18 +368,11 @@ console.log("wishlist items"+wishlistItems)
       setCurrentImage(variant.images[0]);
 
       setSelectedVariant(variant);
-      setSelectedSize(variant.sizes[0].size); 
+      setSelectedSize(variant.sizes[0].size);
     }
 
-   
-    console.log("selevcted varient in handleColorChange..."+selectedVariant)
-
+    console.log("selevcted varient in handleColorChange..." + selectedVariant);
   };
-
-
-
-
-
 
   // Function to check pincode availability
   const checkAvailability = () => {
@@ -400,15 +389,10 @@ console.log("wishlist items"+wishlistItems)
     }
   };
 
-
   const toggleFavorite = () => {
     console.log("Selected Product ID:", selectedProduct.productId);
-    console.log("Selected Variant ID:", selectedVariant?.variantId); 
-    console.log("Selected Variant:", selectedVariant); 
-
-  
-   
-  
+    console.log("Selected Variant ID:", selectedVariant?.variantId);
+    console.log("Selected Variant:", selectedVariant);
     // Check if the current product variant combination is in the wishlist
     if (isInWishlist(selectedProduct.productId, selectedVariant.variantId)) {
       console.log("Removing from wishlist");
@@ -422,20 +406,32 @@ console.log("wishlist items"+wishlistItems)
         // brand: selectedProduct.brand,
         // basePrice: selectedProduct.basePrice,
         // description: selectedProduct.description,
-        ...selectedVariant,  // Include the current variant in the wishlist item
-        selectedSize,     // Include the selected size
-           // Store the unique identifier for easy lookup
+        ...selectedVariant, // Include the current variant in the wishlist item
+        selectedSize, // Include the selected size
+        // Store the unique identifier for easy lookup
       };
       addToWishlist(wishlistItem);
 
       console.log("Current wishlist items:", wishlistItems);
-
     }
   };
-  
+
+  const handleAddToCart = (e) => {
+    // e.stopPropagation();
+    if (isInCart(selectedProduct.productId, selectedVariant.variantId)) {
+      navigate("/cartitem");
+    } else {
+      const cartItem = {
+        ...selectedProduct,
+        ...selectedVariant,
+      };
+
+      addToCart(cartItem);
+    }
+  };
 
   if (!selectedProduct || !selectedVariant) {
-    return <Text>Loading...</Text>; 
+    return <Text>Loading...</Text>;
   }
 
   return (
@@ -462,8 +458,7 @@ console.log("wishlist items"+wishlistItems)
           </Box>
           {/* Main Product Image */}
           <Box maxW="500px" maxH="500px" overflow="hidden">
-        
-          {/* Custom Tag */}
+            {/* Custom Tag */}
             <Box
               position="absolute"
               bg="pink.500"
@@ -491,8 +486,8 @@ console.log("wishlist items"+wishlistItems)
         <Box
           flex="1"
           // maxH="500px"
-          overflowY="auto" 
-          p={4} 
+          overflowY="auto"
+          p={4}
         >
           <Text fontSize="2xl" fontWeight="bold" mb={2}>
             {selectedProduct.name}
@@ -572,11 +567,7 @@ console.log("wishlist items"+wishlistItems)
           </Text>
           <Divider mb={4} borderColor="gray.700" />
 
-
-
           {/* ******************************************************************************* */}
-
-
 
           {/* Size Options */}
           <Text fontSize="lg" fontWeight="semibold" mb={2} mt={4}>
@@ -589,11 +580,9 @@ console.log("wishlist items"+wishlistItems)
                 key={index}
                 variant={selectedSize === size.size ? "solid" : "outline"}
                 colorScheme="pink"
-             
-                opacity={size.stock === 0 ? 0.5 : 1} 
-              
+                opacity={size.stock === 0 ? 0.5 : 1}
                 onClick={() => setSelectedSize(size.size)}
-                width="20px" 
+                width="20px"
               >
                 {size.size}
               </Button>
@@ -617,18 +606,18 @@ console.log("wishlist items"+wishlistItems)
                   selectedVariant.color === variant.color
                     ? "2px solid teal"
                     : "2px solid lightgrey"
-                } 
+                }
                 cursor="pointer"
                 p={1}
                 onClick={() => handleColorChange(variant.color)}
                 borderRadius="md"
-                position="relative" 
+                position="relative"
               >
                 <Image
-                  src={variant.images} 
+                  src={variant.images}
                   alt={variant.color}
-                  boxSize={8} 
-                  objectFit="cover" 
+                  boxSize={8}
+                  objectFit="cover"
                   borderRadius="md"
                 />
               </Box>
@@ -639,24 +628,43 @@ console.log("wishlist items"+wishlistItems)
           <Stack direction="row" spacing={8} mb={6} mt={6}>
             <Button
               leftIcon={<FaCartPlus />}
-              colorScheme="teal"
+              bg={
+                isInCart(selectedProduct.productId, selectedVariant.variantId)
+                  ? "grey"
+                  : "teal.500"
+              }
               variant="solid"
+              // fontSize="0.75rem"
               size="lg"
+              width="350px" //
+              onClick={(e) => {
+                e.preventDefault(); // Prevent default action
+                e.stopPropagation(); // Prevent event bubbling
+                handleAddToCart();
+              }}
               isDisabled={selectedVariant.sizes.every(
                 (size) => size.stock === 0
               )}
-              width="350px" //
             >
-              Add to Cart
+             {isInCart(selectedProduct.productId, selectedVariant.variantId)
+              ? "Go to Cart"
+              : "Add to Cart"}{" "}
             </Button>
+
             <Button
               leftIcon={<FaHeart />}
-              colorScheme={isInWishlist(selectedProduct.productId, selectedVariant.variantId) ? "pink" : "gray"}
+              colorScheme={
+                isInWishlist(
+                  selectedProduct.productId,
+                  selectedVariant.variantId
+                )
+                  ? "pink"
+                  : "gray"
+              }
               variant="outline"
               size="lg"
               width="250px" //
-              onClick={toggleFavorite} 
-
+              onClick={toggleFavorite}
             >
               Favorite
             </Button>
@@ -679,10 +687,10 @@ console.log("wishlist items"+wishlistItems)
                 borderRadius=""
                 border="none"
                 variant="unstyled"
-                h="40px" 
-                _hover={{ borderBottom: "2px solid #d53f8c" }} 
+                h="40px"
+                _hover={{ borderBottom: "2px solid #d53f8c" }}
                 _focus={{ borderBottom: "2px solid #d53f8c", bg: "blue.100" }}
-                transition="all 0.2s ease-in-out" 
+                transition="all 0.2s ease-in-out"
                 pr="4.5rem" // Space for the Apply text
               />
               <InputRightElement width="4.5rem">
@@ -706,8 +714,8 @@ console.log("wishlist items"+wishlistItems)
 
           {/* Delivery-section-card  */}
           <Stack
-            direction={{ base: "column", md: "row" }} 
-            spacing={4} 
+            direction={{ base: "column", md: "row" }}
+            spacing={4}
             mt={4}
             wrap="wrap"
             justify="flex-start"
@@ -717,7 +725,7 @@ console.log("wishlist items"+wishlistItems)
             <Box
               borderWidth="1px"
               borderRadius="md"
-              p={2} 
+              p={2}
               width={{ base: "100%", md: "150px" }} // Decrease width to 150px on larger screens
               boxShadow="sm" // Use a smaller box shadow
               _hover={{ boxShadow: "md", borderColor: "teal.500" }} // Hover effect
@@ -779,9 +787,9 @@ console.log("wishlist items"+wishlistItems)
             >
               <Icon as={FaTruck} boxSize={5} color="blue.500" mb={1} />
               <Text fontSize="sm" fontWeight="bold">
-              Deliver By
-              <br />
-               { selectedVariant.shipping.deliveryDate}
+                Deliver By
+                <br />
+                {selectedVariant.shipping.deliveryDate}
               </Text>
               <Text mt={1} fontSize="xs" color="gray.600">
                 Estimated delivery

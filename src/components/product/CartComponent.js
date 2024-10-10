@@ -1,62 +1,26 @@
-// WishlistComponent.jsx
-import React from "react";
-import {
-  Box,
-  Image,
-  Text,
-  Button,
-  VStack,
-  HStack,
-  Icon,
-  useToast,
-  Flex,
-  SimpleGrid,
-} from "@chakra-ui/react";
-import {
-  AiFillStar,
-  AiOutlineStar,
-  AiOutlineShoppingCart,
-  AiOutlineClose,
-} from "react-icons/ai";
+import React from 'react';
+import { Box, Image, Text, Button, VStack, HStack, Icon, useToast, Flex, SimpleGrid } from '@chakra-ui/react';
+import { AiFillStar, AiOutlineStar,AiOutlineCheckCircle, AiOutlineClose } from "react-icons/ai";
 import ReviewAndRating from "./ReviewAndRating";
-import { Link, useNavigate } from "react-router-dom";
 
-import { useWishlist } from "./WishlistContext"; // Adjust the import path
-import { useCart } from "./CartContext";
+import { useCart } from './CartContext'; // Adjust the import path
+import { Link } from 'react-router-dom';
 
-const WishlistComponent = () => {
+const CartComponent = () => {
   const toast = useToast();
-  const { wishlistItems, removeFromWishlist } = useWishlist();
-  const { addToCart, isInCart } = useCart();
-  const navigate = useNavigate();
-  console.log("99999999999" + wishlistItems.name);
-
-  const handleAddToCart = (product) => {
-    // e.stopPropagation();
-    if (isInCart(product.productId, product.variantId)) {
-      navigate("/cartitem");
-    } else {
-      // const cartItem = {
-      //   ...selectedProduct,
-      //    ...selectedVariant
-      //    };
-      console.log("Adding wishlist item to Cart..... ");
-      addToCart(product);
-    }
-  };
+  const { cartItems, removeFromCart, clearCart,isInCart } = useCart();
 
   return (
     <Box p={6} width="full">
-      {/* Heading for the Wishlist */}
+      {/* Heading for the Cart */}
       <Text fontSize="2xl" fontWeight="bold" textAlign="center" mb={6}>
-        Your Wishlist
+        Your Cart
       </Text>
 
-      {wishlistItems && wishlistItems.length > 0 ? (
+      {cartItems && cartItems.length > 0 ? (
         // Wrap the cards in a responsive grid layout
-        <SimpleGrid 
-        columns={[2, 2, 3, 4]} spacing={6} px={[2, 4, 6, 8]}>
-          {wishlistItems.map((item, index) => (
+        <SimpleGrid columns={[2, 2, 3, 4]} spacing={6} px={[2, 4, 6, 8]}>
+          {cartItems.map((item, index) => (
             <Box
               key={index}
               borderWidth="1px"
@@ -81,10 +45,10 @@ const WishlistComponent = () => {
                 cursor="pointer"
                 _hover={{ color: "red.500" }}
                 onClick={() => {
-                  removeFromWishlist(item.productId, item.variantId);
+                  removeFromCart(item.productId, item.variantId); // Remove item by ID
                   toast({
-                    title: "Removed from Wishlist.",
-                    description: `${item.name} has been removed from your wishlist.`,
+                    title: "Removed from Cart.",
+                    description: `${item.name} has been removed from your cart.`,
                     status: "error",
                     duration: 3000,
                     isClosable: true,
@@ -94,11 +58,12 @@ const WishlistComponent = () => {
 
 
 <Link to={`/product/${item.productId}`}>
+
               {/* Product Image */}
               <Image
                 src={item.images}
                 alt={item.name}
-                boxSize="100rem" // Larger size for vertical layout
+                boxSize="200px" // Larger size for vertical layout
                 objectFit="contain"
                 borderTopRadius="lg"
                 width="100%"
@@ -107,6 +72,35 @@ const WishlistComponent = () => {
               />
 
               {/* Product Information */}
+              {/* <VStack align="start" spacing={2} p={4}>
+                <Text fontWeight="bold" fontSize="md" noOfLines={2}>
+                  {item.name}
+                </Text>
+
+           
+                <Flex align="center" gap={2}>
+                  <Text fontSize="lg" fontWeight="bold">
+                    ${item.price}
+                  </Text>
+                  <Text fontSize="lg">
+                    x {item.quantity}
+                  </Text>
+                </Flex>
+
+                <HStack spacing={1}>
+                  {[...Array(5)].map((_, idx) => (
+                    <Icon
+                      as={idx < item.rating ? AiFillStar : AiOutlineStar}
+                      color={idx < item.rating ? "#ECC94B" : "gray.400"}
+                      key={idx}
+                    />
+                  ))}
+                  <Text color="gray.500" fontSize="sm">
+                    ({item.reviewsCount || 0} Reviews)
+                  </Text>
+                </HStack> */}
+
+                 {/* Product Information */}
               <VStack align="start" spacing={2} p={4}>
                 <Text fontWeight="bold" fontSize="0.75rem" noOfLines={2}>
                   {item.name}
@@ -115,18 +109,18 @@ const WishlistComponent = () => {
                 {/* Discount and Price Information */}
                 <Flex align="center" gap={2}>
                   {item.discount && (
-                    <Text color="red.400" fontSize="0.75rem" >
+                    <Text color="red.400" fontSize="0.75rem">
                       {item.discount} OFF
                     </Text>
                   )}
                   <Text
-                 fontSize="0.75rem" 
+                    fontSize="0.75rem"
                     textDecoration="line-through"
                     color="gray.500"
                   >
                     ${item.basePrice}
                   </Text>
-                  <Text fontSize="0.90rem"  fontWeight="bold">
+                  <Text fontSize="0.90rem" fontWeight="bold">
                     ${item.price} {/* Show selling price if available */}
                   </Text>
                 </Flex>
@@ -137,15 +131,17 @@ const WishlistComponent = () => {
                   reviewsCount={item.reviewsCount}
                 />
 
-                {/* Action Button */}
 
+                
+
+                {/* Action Button */}
                 <Button
                   variant="solid"
-                  leftIcon={<AiOutlineShoppingCart />}
+                  leftIcon={<AiOutlineCheckCircle />}
                   bg={
                     isInCart(item.productId, item.variantId)
-                      ? "grey"
-                      : "teal.500"
+                      ? "teal.500"
+                      : "grey"
                   }
                   width="100%"
                   fontSize="0.75rem"
@@ -155,7 +151,7 @@ const WishlistComponent = () => {
                   onClick={(e) => {
                     e.preventDefault(); // Prevent default action
                     e.stopPropagation(); // Prevent event bubbling
-                    handleAddToCart(item);
+                    // handleProceedToCheckOut(item);
                     toast({
                       title: "Moved to Cart.",
                       description: `${item.name} has been added to your cart.`,
@@ -167,27 +163,35 @@ const WishlistComponent = () => {
                   zIndex={1}
                 >
                   {isInCart(item.productId, item.variantId)
-                    ? "Go to Cart"
-                    : "Add to Cart"}{" "}
+                    ? "Proceed To CheckOut"
+                    : " "}{" "}
                 </Button>
-               
               </VStack>
+
               </Link>
             </Box>
           ))}
         </SimpleGrid>
       ) : (
-        <Text
-          fontSize="xl"
-          fontWeight="bold"
-          color="gray.600"
-          textAlign="center"
-        >
-          Your wishlist is empty.
+        <Text fontSize="xl" fontWeight="bold" color="gray.600" textAlign="center">
+          Your cart is empty.
         </Text>
+      )}
+
+      {/* Clear Cart Button */}
+      {cartItems.length > 0 && (
+        <Button
+          colorScheme="red"
+          variant="outline"
+          mt={4}
+          onClick={clearCart}
+          width="full"
+        >
+          Clear Cart
+        </Button>
       )}
     </Box>
   );
 };
 
-export default WishlistComponent;
+export default CartComponent;

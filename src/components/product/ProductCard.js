@@ -9,7 +9,6 @@ import {
   Icon,
   Stack,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import {
   AiFillStar,
@@ -18,25 +17,59 @@ import {
   AiFillHeart,
   AiOutlineHeart,
 } from "react-icons/ai";
+import { BsTag } from "react-icons/bs";
+import { BiSolidOffer } from "react-icons/bi";
+
+import { Link, useNavigate } from 'react-router-dom';
 
 import ReviewAndRating from "./ReviewAndRating";
 import { useWishlist } from "./WishlistContext";
+import { useCart } from './CartContext'; // Adjust the path accordingly
+
+
 
 const ProductCard = ({ product }) => {
   const { addToWishlist, removeFromWishlist, wishlistItems, isInWishlist } =
     useWishlist();
+    const { addToCart,isInCart,removeFromCart } = useCart();
+    const navigate = useNavigate();
+    const [selectedProduct, setSelectedProduct] = useState(product  );
+    const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
 
   // const cleanImageUrl = product.imageURL.replace(/^["']+|["']+$/g, "");
 
   // Function to toggle favorite status
   const toggleFavorite = (e) => {
     e.stopPropagation();
-    if (isInWishlist(product.productId)) {
-      removeFromWishlist(product.productId);
+
+    if (isInWishlist(selectedProduct.productId, selectedVariant.variantId)) {
+      removeFromWishlist(selectedProduct.productId, selectedVariant.variantId);
     } else {
-      addToWishlist(product);
+
+      const wishlistItem = {
+     ...selectedProduct,
+      ...selectedVariant
+      };
+      addToWishlist(wishlistItem);
     }
   };
+
+  const handleAddToCart = (e) => {
+    // e.stopPropagation();
+    if (isInCart(selectedProduct.productId, selectedVariant.variantId) ){
+      navigate('/cartitem'); 
+    } else {
+      const cartItem = {
+        ...selectedProduct,
+         ...selectedVariant
+         };
+     
+      addToCart(cartItem);
+    }
+  };
+
+
+  
 
   // console.log("Product Is is  ..............."+product.productId)
   // console.log("Product variants  ..............."+product.variants[0].images[0])
@@ -48,33 +81,59 @@ const ProductCard = ({ product }) => {
       overflow="hidden"
       boxShadow="md"
       textAlign="left"
-      transition="all 0.2s ease-in-out"
-      _hover={{ boxShadow: "lg", transform: "scale(1.05)" }}
-      width={{ base: "100%", sm: "200px", md: "250px" }} // Responsive width
-     
-      // width="100%"
-       maxW="250px" 
+      // transition="all 0.2s ease-in-out"
+      // _hover={{ boxShadow: "lg", transform: "scale(1.05)" }}
+      // width={{ base: "100%", sm: "150px", md: "250px" }} // Responsive width
+
+      width="100%"
+      //  maxW="250px"
       position="relative"
       mx="auto" // Center the card
-
     >
       {/* Favorite Icon */}
       <Icon
-        as={isInWishlist(product.productId) ? AiFillHeart : AiOutlineHeart}
-        color={isInWishlist(product.productId) ? "red.500" : "gray.500"}
+        as={isInWishlist(selectedProduct.productId, selectedVariant.variantId) ? AiFillHeart : AiOutlineHeart}
+        color={isInWishlist(selectedProduct.productId, selectedVariant.variantId)? "red.500" : "gray.500"}
         position="absolute"
         top={4}
         right={4}
         onClick={toggleFavorite}
         cursor="pointer"
+        
         boxSize={{ base: 5, md: 6 }} // Responsive icon size
         zIndex={1}
       />
+      {parseFloat(selectedProduct.discount) > 5 && (
+        <Icon
+          as={BiSolidOffer} // Use the offer icon
+          color="pink.500"
+          position="absolute"
+          top={4}
+          left={4}
+          boxSize={{ base: 5, md: 6 }} // Responsive icon size
+          zIndex={1}
+        />
+      )}
+
+      {/* <Flex position="relative" display="inline-block">
+  <Icon as={ product.discount > 3 ?BiSolidOffer: " "} boxSize={10} color="blue.500" />
+  <Text
+    position="absolute"
+    top="50%"
+    left="60%"
+    transform="translate(-50%, -50%)"
+    fontSize="0.75rem"
+    color="black"
+    fontWeight="bold"
+  >
+{product.discount}
+  </Text>
+</Flex> */}
 
       {/* Link wrapping the entire card for navigation */}
       <Link to={`/product/${product.productId}`}>
         <Image
-          src={product.variants[0].images[0]}
+          src={selectedVariant.images[0]}
           // alt={product.variants[0].images[0]}
           width="100%"
           height={{ base: "150px", md: "200px" }} // Responsive image height
@@ -82,18 +141,37 @@ const ProductCard = ({ product }) => {
         />
 
         <VStack spacing={3} align="stretch" p={4}>
-          <Text fontWeight="bold" fontSize={{ base: "sm", md: "md" }} noOfLines={2}>
-            {product.name}
+          <Text fontWeight="bold" fontSize="0.75rem" noOfLines={2}>
+            {selectedProduct.name}
           </Text>
 
-          <Flex>
-            <Text fontWeight=""  fontSize={{ base: "sm", md: "lg" }} color="pink.500" mr={5}>
-              -{product.variants[0].discount}
+          {/* <Flex>
+            <Text fontWeight="" fontSize="0.75rem" color="pink.500" mr={5}>
+              -{selectedVariant.discount}
             </Text>
-            <Text fontSize={{ base: "sm", md: "lg" }}fontWeight="bold" color="" mr={5}>
-              ${product.basePrice}
+            
+            <Text  fontSize="0.75rem" textDecoration="line-through" mx={1}>
+              {" "}
+              ${selectedProduct.basePrice}{" "}
             </Text>
-          </Flex>
+            <Text fontSize="1rem" fontWeight="bold" color="" mr={5}>
+              ${selectedVariant.price}
+            </Text>
+          </Flex> */}
+
+          <Flex align="center" gap={2}>
+                
+                    <Text color="red.400"  fontSize="0.75rem">
+                      {selectedVariant.discount} OFF
+                    </Text>
+                
+                  <Text f fontSize="0.75rem" textDecoration="line-through" color="gray.500">
+                    ${selectedProduct.basePrice}
+                  </Text>
+                  <Text  fontSize="0.90rem" fontWeight="bold">
+                    ${selectedVariant.price} {/* Show selling price if available */}
+                  </Text>
+                </Flex>
 
           {/* Review and Ratings */}
           {/* <Flex align="center" mb={4}>
@@ -121,8 +199,30 @@ const ProductCard = ({ product }) => {
             rating={product.variants[0].rating}
             reviewsCount={product.variants[0].reviewsCount}
           />
-          <Button variant="solid" colorScheme="teal" width="100%" mt={2}>
-            Add to Cart
+
+          <Button
+            variant="solid"
+            
+            bg={isInCart(product.productId, product.variantId)
+              ? "grey"
+              : "teal.500"}
+            width="100%"
+            fontSize="0.75rem"
+            py={{ base: 2, md: 3 }}
+            mt={2}
+           
+            // onClick={() => handleAddToCart()}
+            onClick={(e) => {
+    e.preventDefault(); // Prevent default action
+    e.stopPropagation(); // Prevent event bubbling
+    handleAddToCart();
+  }}
+
+            zIndex={1}
+          >
+            {isInCart(selectedProduct.productId, selectedVariant.variantId)
+              ? "Go to Cart"
+              : "Add to Cart"}{" "}
           </Button>
         </VStack>
       </Link>

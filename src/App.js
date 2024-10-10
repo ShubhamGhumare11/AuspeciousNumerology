@@ -85,7 +85,10 @@ import ProductDetail from "./components/product/ProductDetail";
 import Layout from "./components/Layout";
 import FeatureCards from "./components/Cards/FeatureCards";
 import { WishlistProvider } from './components/product/WishlistContext'; // Adjust the path if necessary
+import { CartProvider } from './components/product/CartContext'; // Adjust the path if necessary
+
 import WishlistComponent from './components/product/WishlistComponent '; // Import your wishlist component
+import CartComponent from "./components/product/CartComponent";
 
 
 
@@ -95,6 +98,7 @@ function App() {
 
     <Flex direction="column" minHeight="100vh"> 
     <WishlistProvider> {/* Wrap the application with WishlistProvider */}
+    <CartProvider>
     <Router >
       <Navbar /> {/* Always visible */}
       <Box flex="1">
@@ -123,6 +127,9 @@ function App() {
         {/* Route for the product listings page */}
         <Route path="/productListing" element={<ProductListings />} />
         <Route path="/wishlist" element={<WishlistComponent />} />
+        
+        <Route path="/cartitem" element={<CartComponent />} />
+
 
       </Routes>
 
@@ -135,6 +142,7 @@ function App() {
       </Box>
       <Footer />
     </Router>
+    </CartProvider>
     </WishlistProvider>
     </Flex>
 

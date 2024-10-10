@@ -11,11 +11,13 @@ const FeatureCards = () => {
   ];
 
   return (
-    <Box py={8} px={4}>
+    <Box py={8} px={4} >
       {/* Responsive Grid Layout */}
       <Grid 
         templateColumns={["repeat(3, 1fr)", "repeat(3, 1fr)", "repeat(5, 1fr)"]} 
         gap={6}
+        justifyItems="center" 
+          alignItems="center"
       >
         {features.map((feature, index) => ( 
           <Box 

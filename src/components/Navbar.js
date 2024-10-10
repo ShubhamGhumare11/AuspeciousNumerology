@@ -23,6 +23,8 @@ import DrawerToggle from "./DrawerToggle"; // Import DrawerToggle component
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useWishlist } from './product/WishlistContext'; // Adjust the import path
+import { useCart } from './product/CartContext'; // Adjust the import path
+
 
 
 function Navbar() {
@@ -32,6 +34,7 @@ function Navbar() {
   const navigate = useNavigate();
 
   const { wishlistItems } = useWishlist();
+  const { cartItems } = useCart();
 
 
   const handleWishlistClick = () => {
@@ -42,6 +45,15 @@ function Navbar() {
     // You can redirect to a wishlist page or show a modal
   };
 
+
+  
+  const handleCartClick = () => {
+    // Implement your logic here to show the wishlist
+    console.log('Cart items:', cartItems);
+    navigate('/cartitem'); // Navigate to the Wishlist component
+
+    // You can redirect to a wishlist page or show a modal
+  };
   return (
     <Box bg="black" boxShadow="sm" 
           position="fixed" // This makes the navbar fixed at the top
@@ -146,6 +158,7 @@ function Navbar() {
               icon={<FaShoppingCart />}
               variant="ghost"
               color="white "
+              onClick={handleCartClick}
             />
             <Box
               position="absolute"
