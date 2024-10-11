@@ -76,12 +76,12 @@ export const CartProvider = ({ children }) => {
       if (itemExists) {
         return prevCartItems.map((cartItem) =>
           cartItem.cartIdentifier === newItem.cartIdentifier
-            ? { ...cartItem, ...newItem }
+            ? { ...cartItem, quantity: (cartItem.quantity || 1) + 1 }
             : cartItem
         );
       }
 
-      return [...prevCartItems, newItem];
+      return [...prevCartItems, { ...newItem, quantity: 1 }];
     });
   };
 
@@ -97,8 +97,16 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
 };
 
+const getTotalItems = () => {
+  return cartItems.reduce((total, item) => {
+    const quantity = item.quantity ? parseInt(item.quantity, 10) : 0; // Ensure quantity is a number
+    return total + quantity;
+  }, 0);
+};
+
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, isInCart ,clearCart}}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, isInCart ,clearCart,getTotalItems }}>
       {children}
     </CartContext.Provider>
   );
