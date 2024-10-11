@@ -24,6 +24,9 @@ import DrawerToggle from "./DrawerToggle"; // Import DrawerToggle component
 // import ProductCard1 from "./components/Cards/ProductCard1";
 import { Link, useNavigate } from 'react-router-dom';
 import { productData } from './product/ProductData';
+import  ProfileDropdown  from './Profile/ProfileDropdown';
+
+
 
 import { useWishlist } from './product/WishlistContext'; // Adjust the import path
 import { useCart } from './product/CartContext'; // Adjust the import path
@@ -47,7 +50,7 @@ function Navbar() {
     setSearchQuery(query);
 
     if (query) {
-      const results = productData.filter((product) =>
+      const results = productData.filter((product) =>  //here we need to get productData
         product.name.toLowerCase().includes(query.toLowerCase())
       );
       setSearchResults(results);
@@ -57,9 +60,10 @@ function Navbar() {
   };
 
   const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`);
     setSearchQuery('');
     setSearchResults([]);
+    navigate(`/product/${productId}`);
+   
   };
 
 
@@ -78,12 +82,19 @@ function Navbar() {
   };
   
   const handleCartClick = () => {
-    // Implement your logic here to show the wishlist
     console.log('Cart items:', cartItems);
-    navigate('/cartitem'); // Navigate to the Wishlist component
+    navigate('/cartitem'); 
 
-    // You can redirect to a wishlist page or show a modal
+  
   };
+
+
+  const handleProfileClick = () => {
+    
+    navigate('/login'); 
+  };
+
+  
   return (
     <Box bg="grey" boxShadow="sm" 
           position="fixed" // This makes the navbar fixed at the top
@@ -219,12 +230,21 @@ function Navbar() {
 
         {/* User, Wishlist, and Cart Icons */}
         <HStack spacing={6} display={displayIcons} mt={{ base: 4, md: 0 }}>
-          <IconButton
+          {/* <IconButton
             aria-label="User Profile"
             icon={<FaUser />}
             variant="ghost"
             color="white "
-          />
+            onClick={handleProfileClick}
+
+          /> */}
+
+          <Box position="relative" role="group">
+            <IconButton aria-label="User Profile" icon={<FaUser />} variant="ghost" color="white" />
+
+            {/* ProfileDropdown will appear on hover */}
+            <ProfileDropdown />
+          </Box>
           <IconButton
             aria-label="Wishlist"
             icon={<FaHeart />}
