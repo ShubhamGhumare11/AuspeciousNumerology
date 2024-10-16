@@ -87,6 +87,10 @@ import FeatureCards from "./components/Cards/FeatureCards";
 import { WishlistProvider } from './components/product/WishlistContext'; // Adjust the path if necessary
 import { CartProvider } from './components/product/CartContext'; // Adjust the path if necessary
 import Login from "./components/Profile/Login";
+import SignUp from "./components/Profile/SignUp";
+import Dashboard from "./components/Profile/Dashboard";
+
+
 import WishlistComponent from './components/product/WishlistComponent '; // Import your wishlist component
 import CartComponent from "./components/product/CartComponent";
 
@@ -127,8 +131,13 @@ function App() {
         {/* Route for the product listings page */}
         <Route path="/productListing" element={<ProductListings />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+
+
         <Route path="/wishlist" element={<WishlistComponent />} />
         <Route path="/cartitem" element={<CartComponent />} />
+        
         
 
 
