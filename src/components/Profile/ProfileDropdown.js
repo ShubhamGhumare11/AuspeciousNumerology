@@ -3,7 +3,7 @@ import { Box, List, ListItem, Button, Divider } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // Example authentication status (replace with your actual authentication logic)
-const isAuthenticated = false;  // Change this to true if the user is logged in
+const isAuthenticated = true;  // Change this to true if the user is logged in
 
 const ProfileDropdown = () => {
   const profileOptions = [

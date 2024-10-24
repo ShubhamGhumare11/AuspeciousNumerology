@@ -58,6 +58,14 @@ const WishlistContext = createContext();
 
 // Custom hook to access the Wishlist context
 export const useWishlist = () => useContext(WishlistContext);
+// export const useWishlist = () => {
+//   const context = useContext(WishlistContext);
+//   if (!context) {
+//     throw new Error("useWishlist must be used within a WishlistProvider");
+//   }
+//   return context;
+// };
+
 
 // Function to create a unique identifier
 const createUniqueIdentifier = (productId, variantId) => `${productId}-${variantId}`;

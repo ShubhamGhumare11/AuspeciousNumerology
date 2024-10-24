@@ -81,6 +81,7 @@ const ProductCard = ({ product }) => {
       overflow="hidden"
       boxShadow="md"
       textAlign="left"
+      maxW="container.xl"
       // transition="all 0.2s ease-in-out"
       // _hover={{ boxShadow: "lg", transform: "scale(1.05)" }}
       // width={{ base: "100%", sm: "150px", md: "250px" }} // Responsive width
@@ -88,7 +89,7 @@ const ProductCard = ({ product }) => {
       width="100%"
       //  maxW="250px"
       position="relative"
-      mx="auto" // Center the card
+      mx="auto" 
     >
       {/* Favorite Icon */}
       <Icon
@@ -100,17 +101,17 @@ const ProductCard = ({ product }) => {
         onClick={toggleFavorite}
         cursor="pointer"
         
-        boxSize={{ base: 5, md: 6 }} // Responsive icon size
+        boxSize={{ base: 5, md: 6 }} 
         zIndex={1}
       />
       {parseFloat(selectedProduct.discount) > 5 && (
         <Icon
-          as={BiSolidOffer} // Use the offer icon
+          as={BiSolidOffer} 
           color="pink.500"
           position="absolute"
           top={4}
           left={4}
-          boxSize={{ base: 5, md: 6 }} // Responsive icon size
+          boxSize={{ base: 5, md: 6 }} 
           zIndex={1}
         />
       )}
@@ -136,7 +137,7 @@ const ProductCard = ({ product }) => {
           src={selectedVariant.images[0]}
           // alt={product.variants[0].images[0]}
           width="100%"
-          height={{ base: "150px", md: "200px" }} // Responsive image height
+          height={{ base: "150px", md: "200px" }} 
           objectFit="contain"
         />
 
@@ -159,7 +160,7 @@ const ProductCard = ({ product }) => {
             </Text>
           </Flex> */}
 
-          <Flex align="center" gap={2}>
+          <Flex align="center" gap={1}>
                 
                     <Text color="red.400"  fontSize="0.75rem">
                       {selectedVariant.discount} OFF
@@ -201,11 +202,14 @@ const ProductCard = ({ product }) => {
           />
 
           <Button
-            variant="solid"
+            // variant="solid"
+
+            variant={isInCart(selectedProduct.productId, selectedVariant.variantId) ? "outline" : "solid"}
+            colorScheme={isInCart(selectedProduct.productId, selectedVariant.variantId) ? "black" : "teal"}
             
-            bg={isInCart(product.productId, product.variantId)
-              ? "grey"
-              : "teal.500"}
+            bg={isInCart(selectedProduct.productId, selectedVariant.variantId)
+              ? "teal.100"
+              : "teal.700"}
             width="100%"
             fontSize="0.75rem"
             py={{ base: 2, md: 3 }}

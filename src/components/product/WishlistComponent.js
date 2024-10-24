@@ -1,4 +1,5 @@
-// WishlistComponent.jsx
+
+  // WishlistComponent.jsx
 import React from "react";
 import {
   Box,
@@ -29,7 +30,7 @@ const WishlistComponent = () => {
   const { wishlistItems, removeFromWishlist } = useWishlist();
   const { addToCart, isInCart } = useCart();
   const navigate = useNavigate();
-  console.log("99999999999" + wishlistItems.name);
+  // console.log("99999999999" + wishlistItems.name);
 
   const handleAddToCart = (product) => {
     // e.stopPropagation();

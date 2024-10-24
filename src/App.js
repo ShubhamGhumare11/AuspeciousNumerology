@@ -68,8 +68,9 @@
 
 
 import logo from "./logo.svg";
-import "./App.css";
+// import "./App.css";
 import { Flex, Box } from '@chakra-ui/react';
+
 
 import Navbar from "./components/Navbar";
 import CategoryBar from "./components/CategoryBar";
@@ -88,38 +89,54 @@ import { WishlistProvider } from './components/product/WishlistContext'; // Adju
 import { CartProvider } from './components/product/CartContext'; // Adjust the path if necessary
 import Login from "./components/Profile/Login";
 import SignUp from "./components/Profile/SignUp";
-import Dashboard from "./components/Profile/Dashboard";
+import VideoSection from "./components/VideoSection";
+
+import SlideShow from "./components/Cards/FeatureCards";
 
 
-import WishlistComponent from './components/product/WishlistComponent '; // Import your wishlist component
+import OfferCard from "./components/Cards/OfferCard";
+
+
+
+// import WishlistComponent from "./components/product/WishlistComponent" // Import your wishlist component
+import WishlistComponent from './components/product/WishlistComponent'; // or .jsx
+
 import CartComponent from "./components/product/CartComponent";
+
+// import theme from './components/Theme'; // Import your custom theme
 
 
 
 
 function App() {
   return (
-
+    
     <Flex direction="column" minHeight="100vh"> 
-    <WishlistProvider> {/* Wrap the application with WishlistProvider */}
-    <CartProvider>
+    <WishlistProvider>
+    <CartProvider >
     <Router >
-      <Navbar /> {/* Always visible */}
+      <Navbar /> 
       <Box flex="1">
     <Layout  >
 
 
       <Routes >
-        {/* Route for the home page */}
+      
         <Route
           path="/"
           element={
             <>
               <CategoryBar />
-              <Banner />
-              <BestSellers />
+              {/* <Banner />
+              <BestSellers /> */}
+
+              {/* <Swipper/> */}
+
+              <OfferCard/>
               <ProductListings />
-              <LiveShopping />
+
+              <VideoSection/>
+              {/* <LiveShopping /> */}
               <FeatureCards/>
             </>
           }
@@ -132,7 +149,6 @@ function App() {
         <Route path="/productListing" element={<ProductListings />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/dashboard" element={<Dashboard />} />
 
 
         <Route path="/wishlist" element={<WishlistComponent />} />

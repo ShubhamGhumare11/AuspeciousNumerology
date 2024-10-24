@@ -101,16 +101,20 @@ function Navbar() {
       top="0"
       left="0"
       width="100%"
+      // maxWidth="150rem"
       height="100px"     // Height of the Navbar
       zIndex="1000"     // Ensure it's above all content
+      // maxW="container.xl"
+
 
     py={3}>
       <Flex
-          maxW="1200px"
+          // maxW="1200px"
+          maxW="container.xl"
           
         mx="auto"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="centre  "
         direction={flexDirection}
         p={{ base: 2, md: 4 }}
 
